@@ -844,7 +844,7 @@ technique ReflectionSpecular
         SrcBlend = SrcAlpha;
         DestBlend = InvSrcAlpha;    
         VertexShader = compile vs_1_1 VS_ReflectionSpecular();
-        PixelShader  = compile ps_1_1 PS_ReflectionSpecular();
+        PixelShader  = compile ps_2_0 PS_ReflectionSpecular();
     }
 }
 
@@ -882,7 +882,7 @@ float4 PS_ReflectionSpecular20(VertexOutput20 In) : COLOR
     // Fresnel
     float3 E = -V;
     float facing = 1.0 - max(dot(E, -N), 0);
-    float fresnel = fresnelBias + (1.0-fresnelBias)*pow(facing, fresnelPower);
+    float fresnel = fresnelBias + (1.0-fresnelBias)*pow(abs(facing), fresnelPower);
 
     // Diffuse factor
     float diff = saturate(dot(N, lightDir));

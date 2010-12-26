@@ -125,7 +125,7 @@ technique GenerateShadowMap
         // shadow light is inside big buildings!
         CullMode = None;
         VertexShader = compile vs_1_1 VS_GenerateShadowMap();
-        PixelShader  = compile ps_1_1 PS_GenerateShadowMap();
+        PixelShader  = compile ps_2_0 PS_GenerateShadowMap();
     }
 }
 

@@ -427,9 +427,8 @@ technique ScreenGlow
     {
         // Disable alpha testing, else most pixels will be skipped
         // because of the highlight HDR technique tricks used here!
-        AlphaTestEnable = false;
         VertexShader = compile vs_1_1 VS_RadialBlur();
-        PixelShader  = compile ps_1_1 PS_RadialBlur(sceneMapSampler);
+        PixelShader  = compile ps_2_0 PS_RadialBlur(sceneMapSampler);
     }
     
     // Sample full render area down to (1/4, 1/4) of its size!
@@ -443,7 +442,7 @@ technique ScreenGlow
     >
     {
         VertexShader = compile vs_1_1 VS_DownSample11();
-        PixelShader  = compile ps_1_1 PS_DownSample11(radialSceneMapSampler);
+        PixelShader  = compile ps_2_0 PS_DownSample11(radialSceneMapSampler);
     }
 
     // Blur everything to make the glow effect.
@@ -457,7 +456,7 @@ technique ScreenGlow
     >
     {
         VertexShader = compile vs_1_1 VS_SimpleBlur(float2(2, 0));
-        PixelShader  = compile ps_1_1 PS_SimpleBlur(downsampleMapSampler);
+        PixelShader  = compile ps_2_0 PS_SimpleBlur(downsampleMapSampler);
     }
 
     pass GlowBlur2
@@ -470,7 +469,7 @@ technique ScreenGlow
     >
     {
         VertexShader = compile vs_1_1 VS_SimpleBlur(float2(0, 2));
-        PixelShader  = compile ps_1_1 PS_SimpleBlur(blurMap1Sampler);
+        PixelShader  = compile ps_2_0 PS_SimpleBlur(blurMap1Sampler);
     }
 
     // And compose the final image with the Blurred Glow and the original image.
@@ -485,7 +484,7 @@ technique ScreenGlow
         // This pass is not as fast as the previous passes (they were done
         // in 1/16 of the original screen size and executed very fast).
         VertexShader = compile vs_1_1 VS_ScreenQuadSampleUp();
-        PixelShader  = compile ps_1_1 PS_ComposeFinalImage(
+        PixelShader  = compile ps_2_0 PS_ComposeFinalImage(
             radialSceneMapSampler, blurMap2Sampler);
     }
 }
@@ -675,7 +674,6 @@ technique ScreenGlow20
     {
         // Disable alpha testing, else most pixels will be skipped
         // because of the highlight HDR technique tricks used here!
-        AlphaTestEnable = false;
         VertexShader = compile vs_1_1 VS_RadialBlur20();
         PixelShader  = compile ps_2_0 PS_RadialBlur20(sceneMapSampler);
     }
