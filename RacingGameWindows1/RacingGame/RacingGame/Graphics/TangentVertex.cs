@@ -21,7 +21,7 @@ namespace RacingGame.Graphics
     /// Tangent vertex format for shader vertex format used all over the place.
     /// It contains: Position, Normal vector, texture coords, tangent vector.
     /// </summary>
-    public struct TangentVertex
+    public struct TangentVertex : IVertexType
     {
         #region Variables
         /// <summary>
@@ -158,8 +158,27 @@ namespace RacingGame.Graphics
         /// <summary>
         /// Vertex declaration for vertex buffers.
         /// </summary>
-        public static VertexDeclaration VertexDeclaration =
-            new VertexDeclaration(BaseGame.Device, VertexElements);
+        public static readonly VertexDeclaration VertexDeclaration = new VertexDeclaration
+            (
+            // Construct new vertex declaration with tangent info
+            // First the normal stuff (we should already have that)
+            new VertexElement(0, VertexElementFormat.Vector3,
+                              VertexElementUsage.Position, 0),
+            new VertexElement(12, VertexElementFormat.Vector2,
+                              VertexElementUsage.TextureCoordinate, 0),
+            new VertexElement(20, VertexElementFormat.Vector3,
+                              VertexElementUsage.Normal, 0),
+            // And now the tangent
+            new VertexElement(32, VertexElementFormat.Vector3,
+                              VertexElementUsage.Tangent, 0)
+            );
+
+        //Implement the IVertexType interface so that we can get the vertex
+        //declaration straight from our custom vertex!
+        VertexDeclaration IVertexType.VertexDeclaration
+        {
+            get { return VertexDeclaration; }
+        }
 
         /// <summary>
         /// Generate vertex declaration
@@ -170,16 +189,15 @@ namespace RacingGame.Graphics
                 {
                     // Construct new vertex declaration with tangent info
                     // First the normal stuff (we should already have that)
-                    new VertexElement(0, 0, VertexElementFormat.Vector3,
-                        VertexElementMethod.Default, VertexElementUsage.Position, 0),
-                    new VertexElement(0, 12, VertexElementFormat.Vector2,
-                        VertexElementMethod.Default,
+                    new VertexElement(0, VertexElementFormat.Vector3,
+                        VertexElementUsage.Position, 0),
+                    new VertexElement(12, VertexElementFormat.Vector2,
                         VertexElementUsage.TextureCoordinate, 0),
-                    new VertexElement(0, 20, VertexElementFormat.Vector3,
-                        VertexElementMethod.Default, VertexElementUsage.Normal, 0),
+                    new VertexElement(20, VertexElementFormat.Vector3,
+                        VertexElementUsage.Normal, 0),
                     // And now the tangent
-                    new VertexElement(0, 32, VertexElementFormat.Vector3,
-                        VertexElementMethod.Default, VertexElementUsage.Tangent, 0),
+                    new VertexElement(32, VertexElementFormat.Vector3,
+                        VertexElementUsage.Tangent, 0),
                 };
             return decl;
         }
