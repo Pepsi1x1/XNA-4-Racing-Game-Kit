@@ -182,15 +182,17 @@ namespace RacingGame.GameLogic
                 StorageDevice storageDevice = FileHelper.XnaUserDevice;
                 if ((storageDevice != null) && storageDevice.IsConnected)
                 {
+                    IAsyncResult async = storageDevice.BeginOpenContainer("RacingGame", null, null);
+
+                    async.AsyncWaitHandle.WaitOne();
+
                     using (StorageContainer container =
-                        storageDevice.OpenContainer("RacingGame"))
+                        storageDevice.EndOpenContainer(async))
                     {
-                        string fullPath = Path.Combine(
-                            container.Path, ReplayFilenames[trackNum]);
-                        if (File.Exists(fullPath))
+                        async.AsyncWaitHandle.Close();
+                        if (container.FileExists(ReplayFilenames[trackNum]))
                         {
-                            replayFileFound = true;
-                            using (FileStream stream = File.Open(fullPath,
+                            using (Stream stream = container.OpenFile(ReplayFilenames[trackNum],
                                 FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
                             {
                                 using (BinaryReader reader = new BinaryReader(stream))
@@ -225,7 +227,7 @@ namespace RacingGame.GameLogic
             if (!replayFileFound && File.Exists(Path.Combine(
                 Directories.ContentDirectory, ReplayFilenames[trackNum])))
             {
-                using (FileStream stream = FileHelper.LoadGameContentFile(
+                using (Stream stream = TitleContainer.OpenStream(
                     "Content\\" + ReplayFilenames[trackNum]))
                 {
                     using (BinaryReader reader = new BinaryReader(stream))

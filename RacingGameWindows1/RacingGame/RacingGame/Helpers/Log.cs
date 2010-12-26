@@ -12,6 +12,7 @@ using System;
 using System.IO;
 using System.Collections;
 using System.ComponentModel;
+using System.IO.IsolatedStorage;
 using System.Threading;
 using System.Diagnostics;
 using Microsoft.Xna.Framework.Storage;
@@ -57,19 +58,23 @@ namespace RacingGame.Helpers
 #if !XBOX360
             try
             {
-                // Open file
-                string fullPath = Path.Combine(
-                    StorageContainer.TitleLocation, LogFilename);
-                FileStream file = File.Open(fullPath, FileMode.OpenOrCreate,
-                    FileAccess.Write, FileShare.ReadWrite); 
+                IsolatedStorageFile isolatedStorageFile = IsolatedStorageFile.GetUserStoreForDomain();
+
+                FileStream file;
+                if (!isolatedStorageFile.FileExists(LogFilename))
+                    file = isolatedStorageFile.CreateFile(LogFilename);
+                else
+                {
+                    file = isolatedStorageFile.OpenFile(LogFilename, FileMode.OpenOrCreate,
+                                                        FileAccess.Write, FileShare.ReadWrite);
+                }
 
                 // Check if file is too big (more than 2 MB),
                 // in this case we just kill it and create a new one :)
                 if (file.Length > 2 * 1024 * 1024)
                 {
                     file.Close();
-                    file = File.Open(fullPath, FileMode.Create,
-                        FileAccess.Write, FileShare.ReadWrite);
+                    file = isolatedStorageFile.CreateFile(LogFilename);
                 }
                 // Associate writer with that, when writing to a new file,
                 // make sure UTF-8 sign is written, else don't write it again!

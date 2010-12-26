@@ -97,17 +97,21 @@ namespace RacingGame.Properties
 
             try
             {
+                //TODO: Use Nick Gravlyn's easy storage?
                 StorageDevice storageDevice = FileHelper.XnaUserDevice;
                 if ((storageDevice != null) && storageDevice.IsConnected)
                 {
+                    IAsyncResult async = storageDevice.BeginOpenContainer("RacingGame", null, null);
+
+                    async.AsyncWaitHandle.WaitOne();
+
                     using (StorageContainer container =
-                        storageDevice.OpenContainer("RacingGame"))
+                        storageDevice.EndOpenContainer(async))
                     {
-                        string fullPath = Path.Combine(
-                            container.Path, SettingsFilename);
-                        if (File.Exists(fullPath))
+                        async.AsyncWaitHandle.Close();
+                        if (container.FileExists(SettingsFilename))
                         {
-                            using (FileStream file = File.Open(fullPath,
+                            using (Stream file = container.OpenFile(SettingsFilename,
                                 FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
                             {
                                 if (file.Length > 0)
@@ -170,13 +174,14 @@ namespace RacingGame.Properties
                 StorageDevice storageDevice = FileHelper.XnaUserDevice;
                 if ((storageDevice != null) && storageDevice.IsConnected)
                 {
-                    using (StorageContainer container =
-                        storageDevice.OpenContainer("RacingGame"))
+                    IAsyncResult async = storageDevice.BeginOpenContainer("RacingGame", null, null);
+
+                    async.AsyncWaitHandle.WaitOne();
+
+                    using (StorageContainer container = storageDevice.EndOpenContainer(async))
                     {
-                        string fullPath = Path.Combine(
-                            container.Path, SettingsFilename);
-                        using (FileStream file = File.Open(fullPath,
-                            FileMode.Create, FileAccess.Write))
+                        async.AsyncWaitHandle.Close();
+                        using (Stream file = container.CreateFile(SettingsFilename))
                         {
                             // Save everything in this class with help of the XmlSerializer.
                             new XmlSerializer(typeof(GameSettings)).

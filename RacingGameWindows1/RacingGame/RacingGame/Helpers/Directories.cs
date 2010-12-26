@@ -29,8 +29,7 @@ namespace RacingGame.Helpers
         /// </summary>
         public static readonly string GameBaseDirectory =
             // Update to support Xbox360:
-            StorageContainer.TitleLocation;
-        //"";
+            "";
         #endregion
 
         #region Directories
