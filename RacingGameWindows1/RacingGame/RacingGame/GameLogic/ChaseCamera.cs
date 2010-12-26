@@ -16,7 +16,7 @@ using RacingGame.GameLogic;
 using RacingGame.Graphics;
 using RacingGame.Helpers;
 using RacingGame.Properties;
-using Color = Microsoft.Xna.Framework.Graphics.Color;
+using Color = Microsoft.Xna.Framework.Color;
 using Model = RacingGame.Graphics.Model;
 #endregion
 
