@@ -1,7 +1,7 @@
-Signature = XACT2;
-Version = 16;
-Content Version = 43;
-Release = August 2007;
+Signature = XACT3;
+Version = 18;
+Content Version = 46;
+Release = February 2010;
 
 Options
 {
@@ -16,8 +16,8 @@ Global Settings
     Header File = RacingGame.h;
     Exclude Category Names = 0;
     Exclude Variable Names = 0;
-    Last Modified Low = 2714263050;
-    Last Modified High = 29816700;
+    Last Modified Low = 29816700;
+    Last Modified High = 2714263050;
 
     Category
     {
@@ -187,7 +187,7 @@ Global Settings
         Value = 0.000000;
         Initial Value = 0.000000;
         Min = 0.000000;
-        Max = 15.000001;
+        Max = 15000.000000;
     }
 
     Variable
@@ -204,7 +204,7 @@ Global Settings
         Value = 0.000000;
         Initial Value = 0.000000;
         Min = 0.000000;
-        Max = 15.000001;
+        Max = 15000.000000;
     }
 
     Variable
@@ -264,7 +264,7 @@ Global Settings
 
         RPC Curve
         {
-            Name = Sound::8a6f0bcf-b9b2-4a47-8b25-e1fc31eb61a6;
+            Name = Sound::71fdd355-63c3-4015-affa-ead8c82fe098;
             Property = 1;
             Sound = 1;
             Viewable = 1;
@@ -295,7 +295,7 @@ Global Settings
         Name = Music Compression;
         Xbox Format Tag = 357;
         Target Sample Rate = 48000;
-        Quality = 75;
+        XMA Quality = 75;
         Find Best Quality = 0;
         High Freq Cut = 0;
         Loop = 0;
@@ -308,7 +308,7 @@ Global Settings
         Name = MotorSounds Compression;
         Xbox Format Tag = 357;
         Target Sample Rate = 48000;
-        Quality = 80;
+        XMA Quality = 80;
         Find Best Quality = 0;
         High Freq Cut = 0;
         Loop = 0;
@@ -1031,6 +1031,7 @@ Sound Bank
         Track
         {
             Volume = 0;
+            Use Filter = 0;
 
             Play Wave Event
             {
@@ -1039,7 +1040,7 @@ Sound Bank
                 Use Center Speaker = 1;
                 New Speaker Position On Loop = 1;
                 Speaker Position Angle = 0.000000;
-                Speaer Position Arc = 360.000000;
+                Speaker Position Arc = 360.000000;
 
                 Event Header
                 {
@@ -1077,6 +1078,7 @@ Sound Bank
         Track
         {
             Volume = 0;
+            Use Filter = 0;
 
             Play Wave Event
             {
@@ -1085,7 +1087,7 @@ Sound Bank
                 Use Center Speaker = 1;
                 New Speaker Position On Loop = 1;
                 Speaker Position Angle = 0.000000;
-                Speaer Position Arc = 360.000000;
+                Speaker Position Arc = 360.000000;
 
                 Event Header
                 {
@@ -1123,6 +1125,7 @@ Sound Bank
         Track
         {
             Volume = 0;
+            Use Filter = 0;
 
             Play Wave Event
             {
@@ -1131,7 +1134,7 @@ Sound Bank
                 Use Center Speaker = 1;
                 New Speaker Position On Loop = 1;
                 Speaker Position Angle = 0.000000;
-                Speaer Position Arc = 360.000000;
+                Speaker Position Arc = 360.000000;
 
                 Event Header
                 {
@@ -1169,6 +1172,7 @@ Sound Bank
         Track
         {
             Volume = 0;
+            Use Filter = 0;
 
             Play Wave Event
             {
@@ -1177,7 +1181,7 @@ Sound Bank
                 Use Center Speaker = 1;
                 New Speaker Position On Loop = 1;
                 Speaker Position Angle = 0.000000;
-                Speaer Position Arc = 360.000000;
+                Speaker Position Arc = 360.000000;
 
                 Event Header
                 {
@@ -1215,6 +1219,7 @@ Sound Bank
         Track
         {
             Volume = 0;
+            Use Filter = 0;
 
             Play Wave Event
             {
@@ -1224,7 +1229,7 @@ Sound Bank
                 Use Center Speaker = 1;
                 New Speaker Position On Loop = 1;
                 Speaker Position Angle = 0.000000;
-                Speaer Position Arc = 0.000000;
+                Speaker Position Arc = 0.000000;
 
                 Event Header
                 {
@@ -1262,6 +1267,7 @@ Sound Bank
         Track
         {
             Volume = 0;
+            Use Filter = 0;
 
             Play Wave Event
             {
@@ -1271,7 +1277,7 @@ Sound Bank
                 Use Center Speaker = 1;
                 New Speaker Position On Loop = 1;
                 Speaker Position Angle = 0.000000;
-                Speaer Position Arc = 0.000000;
+                Speaker Position Arc = 0.000000;
 
                 Event Header
                 {
@@ -1309,6 +1315,7 @@ Sound Bank
         Track
         {
             Volume = 0;
+            Use Filter = 0;
 
             Play Wave Event
             {
@@ -1318,7 +1325,7 @@ Sound Bank
                 Use Center Speaker = 1;
                 New Speaker Position On Loop = 1;
                 Speaker Position Angle = 0.000000;
-                Speaer Position Arc = 0.000000;
+                Speaker Position Arc = 0.000000;
 
                 Event Header
                 {
@@ -1361,6 +1368,7 @@ Sound Bank
         Track
         {
             Volume = 0;
+            Use Filter = 0;
 
             Play Wave Event
             {
@@ -1370,7 +1378,7 @@ Sound Bank
                 Use Center Speaker = 1;
                 New Speaker Position On Loop = 1;
                 Speaker Position Angle = 0.000000;
-                Speaer Position Arc = 0.000000;
+                Speaker Position Arc = 0.000000;
 
                 Event Header
                 {
@@ -1408,6 +1416,7 @@ Sound Bank
         Track
         {
             Volume = 0;
+            Use Filter = 0;
 
             Play Wave Event
             {
@@ -1416,7 +1425,7 @@ Sound Bank
                 Use Center Speaker = 1;
                 New Speaker Position On Loop = 1;
                 Speaker Position Angle = 0.000000;
-                Speaer Position Arc = 0.000000;
+                Speaker Position Arc = 0.000000;
 
                 Event Header
                 {
@@ -1454,6 +1463,7 @@ Sound Bank
         Track
         {
             Volume = 0;
+            Use Filter = 0;
 
             Play Wave Event
             {
@@ -1462,7 +1472,7 @@ Sound Bank
                 Use Center Speaker = 1;
                 New Speaker Position On Loop = 1;
                 Speaker Position Angle = 0.000000;
-                Speaer Position Arc = 0.000000;
+                Speaker Position Arc = 0.000000;
 
                 Event Header
                 {
@@ -1500,6 +1510,7 @@ Sound Bank
         Track
         {
             Volume = 0;
+            Use Filter = 0;
 
             Play Wave Event
             {
@@ -1508,7 +1519,7 @@ Sound Bank
                 Use Center Speaker = 1;
                 New Speaker Position On Loop = 1;
                 Speaker Position Angle = 0.000000;
-                Speaer Position Arc = 0.000000;
+                Speaker Position Arc = 0.000000;
 
                 Event Header
                 {
@@ -1546,6 +1557,7 @@ Sound Bank
         Track
         {
             Volume = 0;
+            Use Filter = 0;
 
             Play Wave Event
             {
@@ -1554,7 +1566,7 @@ Sound Bank
                 Use Center Speaker = 1;
                 New Speaker Position On Loop = 1;
                 Speaker Position Angle = 0.000000;
-                Speaer Position Arc = 0.000000;
+                Speaker Position Arc = 0.000000;
 
                 Event Header
                 {
@@ -1592,6 +1604,7 @@ Sound Bank
         Track
         {
             Volume = 0;
+            Use Filter = 0;
 
             Play Wave Event
             {
@@ -1600,7 +1613,7 @@ Sound Bank
                 Use Center Speaker = 1;
                 New Speaker Position On Loop = 1;
                 Speaker Position Angle = 0.000000;
-                Speaer Position Arc = 0.000000;
+                Speaker Position Arc = 0.000000;
 
                 Event Header
                 {
@@ -1638,6 +1651,7 @@ Sound Bank
         Track
         {
             Volume = 0;
+            Use Filter = 0;
 
             Play Wave Event
             {
@@ -1646,7 +1660,7 @@ Sound Bank
                 Use Center Speaker = 1;
                 New Speaker Position On Loop = 1;
                 Speaker Position Angle = 0.000000;
-                Speaer Position Arc = 0.000000;
+                Speaker Position Arc = 0.000000;
 
                 Event Header
                 {
@@ -1689,6 +1703,7 @@ Sound Bank
         Track
         {
             Volume = 0;
+            Use Filter = 0;
 
             Play Wave Event
             {
@@ -1698,7 +1713,7 @@ Sound Bank
                 Use Center Speaker = 1;
                 New Speaker Position On Loop = 1;
                 Speaker Position Angle = 0.000000;
-                Speaer Position Arc = 0.000000;
+                Speaker Position Arc = 0.000000;
 
                 Event Header
                 {
@@ -1736,6 +1751,7 @@ Sound Bank
         Track
         {
             Volume = 0;
+            Use Filter = 0;
 
             Play Wave Event
             {
@@ -1744,7 +1760,7 @@ Sound Bank
                 Use Center Speaker = 1;
                 New Speaker Position On Loop = 1;
                 Speaker Position Angle = 0.000000;
-                Speaer Position Arc = 0.000000;
+                Speaker Position Arc = 0.000000;
 
                 Event Header
                 {
@@ -1787,6 +1803,7 @@ Sound Bank
         Track
         {
             Volume = 0;
+            Use Filter = 0;
 
             Play Wave Event
             {
@@ -1796,7 +1813,7 @@ Sound Bank
                 Use Center Speaker = 1;
                 New Speaker Position On Loop = 1;
                 Speaker Position Angle = 0.000000;
-                Speaer Position Arc = 0.000000;
+                Speaker Position Arc = 0.000000;
 
                 Event Header
                 {
@@ -1834,6 +1851,7 @@ Sound Bank
         Track
         {
             Volume = 0;
+            Use Filter = 0;
 
             Play Wave Event
             {
@@ -1842,7 +1860,7 @@ Sound Bank
                 Use Center Speaker = 1;
                 New Speaker Position On Loop = 1;
                 Speaker Position Angle = 0.000000;
-                Speaer Position Arc = 0.000000;
+                Speaker Position Arc = 0.000000;
 
                 Event Header
                 {
@@ -1885,6 +1903,7 @@ Sound Bank
         Track
         {
             Volume = 0;
+            Use Filter = 0;
 
             Play Wave Event
             {
@@ -1894,7 +1913,7 @@ Sound Bank
                 Use Center Speaker = 1;
                 New Speaker Position On Loop = 1;
                 Speaker Position Angle = 0.000000;
-                Speaer Position Arc = 0.000000;
+                Speaker Position Arc = 0.000000;
 
                 Event Header
                 {
@@ -1932,6 +1951,7 @@ Sound Bank
         Track
         {
             Volume = 0;
+            Use Filter = 0;
 
             Play Wave Event
             {
@@ -1940,7 +1960,7 @@ Sound Bank
                 Use Center Speaker = 1;
                 New Speaker Position On Loop = 1;
                 Speaker Position Angle = 0.000000;
-                Speaer Position Arc = 0.000000;
+                Speaker Position Arc = 0.000000;
 
                 Event Header
                 {
@@ -1983,6 +2003,7 @@ Sound Bank
         Track
         {
             Volume = 0;
+            Use Filter = 0;
 
             Play Wave Event
             {
@@ -1992,7 +2013,7 @@ Sound Bank
                 Use Center Speaker = 1;
                 New Speaker Position On Loop = 1;
                 Speaker Position Angle = 0.000000;
-                Speaer Position Arc = 0.000000;
+                Speaker Position Arc = 0.000000;
 
                 Event Header
                 {
@@ -2030,6 +2051,7 @@ Sound Bank
         Track
         {
             Volume = 0;
+            Use Filter = 0;
 
             Play Wave Event
             {
@@ -2038,7 +2060,7 @@ Sound Bank
                 Use Center Speaker = 1;
                 New Speaker Position On Loop = 1;
                 Speaker Position Angle = 0.000000;
-                Speaer Position Arc = 0.000000;
+                Speaker Position Arc = 0.000000;
 
                 Event Header
                 {
@@ -2076,6 +2098,7 @@ Sound Bank
         Track
         {
             Volume = 0;
+            Use Filter = 0;
 
             Play Wave Event
             {
@@ -2084,7 +2107,7 @@ Sound Bank
                 Use Center Speaker = 1;
                 New Speaker Position On Loop = 1;
                 Speaker Position Angle = 0.000000;
-                Speaer Position Arc = 0.000000;
+                Speaker Position Arc = 0.000000;
 
                 Event Header
                 {
@@ -2122,6 +2145,7 @@ Sound Bank
         Track
         {
             Volume = 0;
+            Use Filter = 0;
 
             Play Wave Event
             {
@@ -2130,7 +2154,7 @@ Sound Bank
                 Use Center Speaker = 1;
                 New Speaker Position On Loop = 1;
                 Speaker Position Angle = 0.000000;
-                Speaer Position Arc = 0.000000;
+                Speaker Position Arc = 0.000000;
 
                 Event Header
                 {
@@ -2168,6 +2192,7 @@ Sound Bank
         Track
         {
             Volume = 0;
+            Use Filter = 0;
 
             Play Wave Event
             {
@@ -2176,7 +2201,7 @@ Sound Bank
                 Use Center Speaker = 1;
                 New Speaker Position On Loop = 1;
                 Speaker Position Angle = 0.000000;
-                Speaer Position Arc = 0.000000;
+                Speaker Position Arc = 0.000000;
 
                 Event Header
                 {
@@ -2214,6 +2239,7 @@ Sound Bank
         Track
         {
             Volume = 0;
+            Use Filter = 0;
 
             Play Wave Event
             {
@@ -2222,7 +2248,7 @@ Sound Bank
                 Use Center Speaker = 1;
                 New Speaker Position On Loop = 1;
                 Speaker Position Angle = 0.000000;
-                Speaer Position Arc = 0.000000;
+                Speaker Position Arc = 0.000000;
 
                 Event Header
                 {
@@ -2260,6 +2286,7 @@ Sound Bank
         Track
         {
             Volume = 0;
+            Use Filter = 0;
 
             Play Wave Event
             {
@@ -2268,7 +2295,7 @@ Sound Bank
                 Use Center Speaker = 1;
                 New Speaker Position On Loop = 1;
                 Speaker Position Angle = 0.000000;
-                Speaer Position Arc = 0.000000;
+                Speaker Position Arc = 0.000000;
 
                 Event Header
                 {
@@ -2306,6 +2333,7 @@ Sound Bank
         Track
         {
             Volume = 0;
+            Use Filter = 0;
 
             Play Wave Event
             {
@@ -2314,7 +2342,7 @@ Sound Bank
                 Use Center Speaker = 1;
                 New Speaker Position On Loop = 1;
                 Speaker Position Angle = 0.000000;
-                Speaer Position Arc = 0.000000;
+                Speaker Position Arc = 0.000000;
 
                 Event Header
                 {
