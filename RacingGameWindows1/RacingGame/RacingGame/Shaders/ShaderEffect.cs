@@ -787,7 +787,10 @@ namespace RacingGame.Shaders
         /// </summary>
         public void Update()
         {
-            effect.CommitChanges();
+            for (int num = 0; num < effect.CurrentTechnique.Passes.Count; num++)
+            {
+                effect.CurrentTechnique.Passes[num].Apply();
+            }
         }
         #endregion
 
@@ -811,9 +814,7 @@ namespace RacingGame.Shaders
 
             // Start shader
             effect.CurrentTechnique = effect.Techniques[techniqueName];
-            try
-            {
-                effect.Begin(SaveStateMode.None);
+
 
                 // Render all passes (usually just one)
                 //foreach (EffectPass pass in effect.CurrentTechnique.Passes)
@@ -821,16 +822,9 @@ namespace RacingGame.Shaders
                 {
                     EffectPass pass = effect.CurrentTechnique.Passes[num];
 
-                    pass.Begin();
+                    pass.Apply();
                     renderCode();
-                    pass.End();
                 }
-            }
-            finally
-            {
-                // End shader
-                effect.End();
-            }
         }
 
         /// <summary>
@@ -857,22 +851,13 @@ namespace RacingGame.Shaders
                 throw new ArgumentNullException("renderCode");
 
             // Start effect (current technique should be set)
-            try
-            {
-                effect.Begin(SaveStateMode.None);
+
                 // Start first pass
-                effect.CurrentTechnique.Passes[0].Begin();
+                effect.CurrentTechnique.Passes[0].Apply();
 
                 // Render
                 renderCode();
 
-                // End pass and shader
-                effect.CurrentTechnique.Passes[0].End();
-            }
-            finally
-            {
-                effect.End();
-            }
         }
         #endregion
     }

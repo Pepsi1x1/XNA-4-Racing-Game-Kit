@@ -884,11 +884,7 @@ namespace RacingGame.Graphics
                 throw new ArgumentNullException("lineManager2D");
 
             // Disable depth buffer for UI
-            BaseGame.Device.RenderState.DepthBufferEnable = false;
-
-            // Overwrite the vertex declaration to make sure we don't use
-            // the old format anymore.
-            BaseGame.Device.VertexDeclaration = TangentVertex.VertexDeclaration;
+            BaseGame.Device.DepthStencilState = DepthStencilState.None;
 
             // Draw all sprites
             Texture.additiveSprite.End();
@@ -897,6 +893,9 @@ namespace RacingGame.Graphics
 
             // Render all 2d lines
             lineManager2D.Render();
+
+            // Restore depth buffer?
+            BaseGame.Device.DepthStencilState = DepthStencilState.Default;
         }
 
         /// <summary>
@@ -929,8 +928,8 @@ namespace RacingGame.Graphics
                 // Also don't show cursor in game!
                 RacingGameManager.ShowMouseCursor)
             {
-                Texture.alphaSprite.Begin(SpriteBlendMode.Additive);
-                Texture.additiveSprite.Begin(SpriteBlendMode.AlphaBlend);
+                Texture.alphaSprite.Begin(SpriteSortMode.Deferred, BlendState.Additive);
+                Texture.additiveSprite.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend);
 
                 // Use our SpriteHelper logic to render the mouse cursor now!
                 mouseCursor.RenderOnScreen(Input.MousePos);

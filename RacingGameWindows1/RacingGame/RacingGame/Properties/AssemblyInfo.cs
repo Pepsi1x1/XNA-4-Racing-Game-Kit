@@ -5,22 +5,24 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("Racing Game")]
-[assembly: AssemblyProduct("Racing Game")]
-[assembly: AssemblyDescription("Racing Game is a 3D auto racing game. Race around the track and try to beat the ghost car to achieve the best time.")]
-[assembly: AssemblyCompany("$registeredorganization$")]
-[assembly: AssemblyCopyright("Copyright © $registeredorganization$ $year$")]
+[assembly: AssemblyTitle("RacingGame")]
+[assembly: AssemblyProduct("RacingGame")]
+[assembly: AssemblyDescription("")]
+[assembly: AssemblyCompany("")]
+[assembly: AssemblyCopyright("Copyright ©  2010")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
 // Setting ComVisible to false makes the types in this assembly not visible 
 // to COM components.  If you need to access a type in this assembly from 
-// COM, set the ComVisible attribute to true on that type.
+// COM, set the ComVisible attribute to true on that type. Only Windows
+// assemblies support COM.
 [assembly: ComVisible(false)]
 
-// The following GUID is for the ID of the typelib if this project is exposed to COM
-[assembly: Guid("$guid1$")]
-
+// On Windows, the following GUID is for the ID of the typelib if this
+// project is exposed to COM. On other platforms, it unique identifies the
+// title storage container when deploying this assembly to the device.
+[assembly: Guid("255d7446-abbc-485c-958e-c692d18e87a5")]
 
 // Version information for an assembly consists of the following four values:
 //

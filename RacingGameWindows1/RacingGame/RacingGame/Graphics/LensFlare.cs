@@ -359,7 +359,7 @@ namespace RacingGame.Graphics
                     // For the sun and glow flares try always to use max. intensity
                     (data.type == SunFlareType || data.type == GlowFlareType ?
                     sunIntensity : alpha)),
-                    SpriteBlendMode.Additive);
+                    BlendState.Additive);
             }
         }
         #endregion

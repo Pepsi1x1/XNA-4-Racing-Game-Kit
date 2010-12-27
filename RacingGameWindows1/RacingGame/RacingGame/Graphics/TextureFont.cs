@@ -399,7 +399,7 @@ namespace RacingGame.Graphics
                 return;
 
             // Start rendering
-            fontSprite.Begin(SpriteBlendMode.AlphaBlend);
+            fontSprite.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend);
 
             // Draw each character in the text
             //foreach (UIRenderer.FontToRender fontText in texts)

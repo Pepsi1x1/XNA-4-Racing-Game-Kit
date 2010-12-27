@@ -267,7 +267,7 @@ namespace RacingGame.Tracks
         public static TrackData Load(string setFilename)
         {
             // Load track data
-            StreamReader file = new StreamReader(FileHelper.LoadGameContentFile(
+            StreamReader file = new StreamReader(TitleContainer.OpenStream(
                 Directory + "\\" + setFilename + "." + Extension));
 
             // Load everything into this class with help of the XmlSerializer.

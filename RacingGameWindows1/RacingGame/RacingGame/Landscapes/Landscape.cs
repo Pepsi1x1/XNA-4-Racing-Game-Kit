@@ -835,7 +835,7 @@ namespace RacingGame.Landscapes
         internal Landscape(RacingGameManager.Level setLevel)
         {
             #region Load map height data
-            FileStream file = FileHelper.LoadGameContentFile(
+            Stream file = TitleContainer.OpenStream(
                 "Content\\LandscapeHeights.data");
             byte[] heights = new byte[GridWidth * GridHeight];
             file.Read(heights, 0, GridWidth * GridHeight);
@@ -1104,8 +1104,7 @@ namespace RacingGame.Landscapes
         public void Render()
         {
             // Make sure z buffer is on
-            BaseGame.Device.RenderState.DepthBufferEnable = true;
-            BaseGame.Device.RenderState.DepthBufferWriteEnable = true;
+            BaseGame.Device.DepthStencilState = DepthStencilState.Default;
 
             BaseGame.WorldMatrix = Matrix.Identity;
 
@@ -1135,9 +1134,7 @@ namespace RacingGame.Landscapes
         /// </summary>
         private void RenderLandscapeVertices()
         {
-            BaseGame.Device.VertexDeclaration = TangentVertex.VertexDeclaration;
-            BaseGame.Device.Vertices[0].SetSource(vertexBuffer, 0,
-                TangentVertex.SizeInBytes);
+            BaseGame.Device.SetVertexBuffer(vertexBuffer);
             BaseGame.Device.Indices = indexBuffer;
             BaseGame.Device.DrawIndexedPrimitives(PrimitiveType.TriangleList,
                 0, 0, GridWidth * GridHeight,
@@ -1334,7 +1331,6 @@ namespace RacingGame.Landscapes
 
             BaseGame.SetAlphaBlendingEnabled(true);
             BaseGame.WorldMatrix = Matrix.Identity;
-            BaseGame.Device.VertexDeclaration = TangentVertex.VertexDeclaration;
             ShaderEffect.lighting.Render(
                 RacingGameManager.BrakeTrackMaterial,
                 "Diffuse20",

@@ -292,7 +292,7 @@ namespace RacingGame.Shaders
             WorldMatrix = world;
             WorldViewProjMatrix =
                 world * lightViewMatrix * lightProjectionMatrix;
-            effect.CommitChanges();
+            effect.CurrentTechnique.Passes[0].Apply();
         }
 
         /// <summary>
@@ -311,20 +311,13 @@ namespace RacingGame.Shaders
             CalcSimpleDirectionalShadowMappingMatrix();
 
             // Time to generate the shadow texture
-            DepthStencilBuffer remBackBufferSurface = null;
             // Start rendering onto the shadow map
             shadowMapTexture.SetRenderTarget();
-            if (shadowMapTexture.ZBufferSurface != null)
-            {
-                remBackBufferSurface = BaseGame.Device.DepthStencilBuffer;
-                BaseGame.Device.DepthStencilBuffer =
-                    shadowMapTexture.ZBufferSurface;
-            }
 
             // Make sure depth buffer is on
-            BaseGame.Device.RenderState.DepthBufferEnable = true;
+            BaseGame.Device.DepthStencilState = DepthStencilState.Default;
             // Disable alpha
-            BaseGame.Device.RenderState.AlphaBlendEnable = false;
+            BaseGame.Device.BlendState = BlendState.Opaque;
 
             // Clear render target
             shadowMapTexture.Clear(Color.White);
@@ -339,9 +332,6 @@ namespace RacingGame.Shaders
 
             // Set render target back to default
             BaseGame.ResetRenderTarget(false);
-
-            if (shadowMapTexture.ZBufferSurface != null)
-                BaseGame.Device.DepthStencilBuffer = remBackBufferSurface;
 
             BaseGame.ViewMatrix = remViewMatrix;
             BaseGame.ProjectionMatrix = remProjMatrix;
@@ -375,7 +365,7 @@ namespace RacingGame.Shaders
                 lightProjectionMatrix;
             worldViewProjLight.SetValue(worldViewProjLightMatrix);
 
-            effect.CommitChanges();
+            effect.CurrentTechnique.Passes[0].Apply();
         }
 
         /// <summary>
@@ -396,8 +386,7 @@ namespace RacingGame.Shaders
                 return;
 
             // Make sure z buffer and writing z buffer is on
-            BaseGame.Device.RenderState.DepthBufferEnable = true;
-            BaseGame.Device.RenderState.DepthBufferWriteEnable = true;
+            BaseGame.Device.DepthStencilState = DepthStencilState.Default;
 
             // Render shadows into our shadowMapBlur render target
             shadowMapBlur.RenderShadows(

@@ -192,10 +192,10 @@ namespace RacingGame.Shaders
             sceneMapTexture.Resolve();
 
             // Don't use or write to the z buffer
-            BaseGame.Device.RenderState.DepthBufferEnable = false;
-            BaseGame.Device.RenderState.DepthBufferWriteEnable = false;
+            BaseGame.Device.DepthStencilState = DepthStencilState.None;
+
             // Also don't use any kind of blending.
-            BaseGame.Device.RenderState.AlphaBlendEnable = false;
+            BaseGame.Device.BlendState = BlendState.Opaque;
 
             if (windowSize != null)
                 windowSize.SetValue(
@@ -216,7 +216,6 @@ namespace RacingGame.Shaders
 
             try
             {
-                effect.Begin();
                 for (int pass = 0; pass < effect.CurrentTechnique.Passes.Count; pass++)
                 {
                     if (pass == 0)
@@ -230,40 +229,36 @@ namespace RacingGame.Shaders
                         BaseGame.ResetRenderTarget(true);
 
                     EffectPass effectPass = effect.CurrentTechnique.Passes[pass];
-                    effectPass.Begin();
+                    effectPass.Apply();
                     VBScreenHelper.Render();
-                    effectPass.End();
 
                     if (pass == 0)
                     {
                         downsampleMapTexture.Resolve();
                         if (downsampleMap != null)
                             downsampleMap.SetValue(downsampleMapTexture.XnaTexture);
-                        effect.CommitChanges();
+                        effectPass.Apply();
                     }
                     else if (pass == 1)
                     {
                         blurMap1Texture.Resolve();
                         if (blurMap1 != null)
                             blurMap1.SetValue(blurMap1Texture.XnaTexture);
-                        effect.CommitChanges();
+                        effectPass.Apply();
                     }
                     else if (pass == 2)
                     {
                         blurMap2Texture.Resolve();
                         if (blurMap2 != null)
                             blurMap2.SetValue(blurMap2Texture.XnaTexture);
-                        effect.CommitChanges();
+                        effectPass.Apply();
                     }
                 }
             }
             finally
             {
-                effect.End();
-
                 // Restore z buffer state
-                BaseGame.Device.RenderState.DepthBufferEnable = true;
-                BaseGame.Device.RenderState.DepthBufferWriteEnable = true;
+                BaseGame.Device.DepthStencilState = DepthStencilState.Default;
             }
         }
         #endregion

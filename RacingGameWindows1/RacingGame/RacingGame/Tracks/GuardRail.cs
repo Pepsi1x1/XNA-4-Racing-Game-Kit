@@ -414,7 +414,7 @@ namespace RacingGame.Tracks
         public void Render(Material guardRailMaterial)
         {
             // We use tangent vertices for everything here
-            BaseGame.Device.VertexDeclaration = TangentVertex.VertexDeclaration;
+
             // Restore the world matrix
             BaseGame.WorldMatrix = Matrix.Identity;
 
@@ -441,8 +441,7 @@ namespace RacingGame.Tracks
         /// </summary>
         private void RenderGuardRailVertices()
         {
-            BaseGame.Device.Vertices[0].SetSource(railVb, 0,
-                TangentVertex.SizeInBytes);
+            BaseGame.Device.SetVertexBuffer(railVb);
             BaseGame.Device.Indices = railIb;
             BaseGame.Device.DrawIndexedPrimitives(
                 PrimitiveType.TriangleList,

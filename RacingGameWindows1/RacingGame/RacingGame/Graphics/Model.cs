@@ -302,7 +302,7 @@ namespace RacingGame.Graphics
                     // Material settings are build from the effect settings.
                     // Also add this to our own dictionary for rendering.
                     renderableMeshes.Add(part, BaseGame.MeshRenderManager.Add(
-                        mesh.VertexBuffer, mesh.IndexBuffer, part, part.Effect));
+                        part.VertexBuffer, part.IndexBuffer, part, part.Effect));
                 }
             }
 
@@ -523,18 +523,14 @@ namespace RacingGame.Graphics
                             {
                                 ModelMeshPart part = mesh.MeshParts[partNum];
                                 // Make sure vertex declaration is correct
-                                BaseGame.Device.VertexDeclaration =
-                                    part.VertexDeclaration;
                                 // Set vertex buffer and index buffer
-                                BaseGame.Device.Vertices[0].SetSource(
-                                    mesh.VertexBuffer, part.StreamOffset,
-                                    part.VertexStride);
-                                BaseGame.Device.Indices = mesh.IndexBuffer;
+                                BaseGame.Device.SetVertexBuffer(part.VertexBuffer);
+                                BaseGame.Device.Indices = part.IndexBuffer;
 
                                 // And render all primitives
                                 BaseGame.Device.DrawIndexedPrimitives(
                                     PrimitiveType.TriangleList,
-                                    part.BaseVertex, 0, part.NumVertices,
+                                    part.VertexOffset, 0, part.NumVertices,
                                     part.StartIndex, part.PrimitiveCount);
                             }
                         }
@@ -726,13 +722,11 @@ namespace RacingGame.Graphics
                     // Render just the vertices, do not use the shaders of our model.
                     // This is the same code as ModelMeshPart.Draw() uses, but
                     // this method is internal and can't be used by us :(
-                    BaseGame.Device.VertexDeclaration = part.VertexDeclaration;
-                    BaseGame.Device.Vertices[0].SetSource(
-                        mesh.VertexBuffer, part.StreamOffset, part.VertexStride);
-                    BaseGame.Device.Indices = mesh.IndexBuffer;
+                    BaseGame.Device.SetVertexBuffer(part.VertexBuffer);
+                    BaseGame.Device.Indices = part.IndexBuffer;
                     BaseGame.Device.DrawIndexedPrimitives(
                         PrimitiveType.TriangleList,
-                        part.BaseVertex, 0,
+                        part.VertexOffset, 0,
                         part.NumVertices, part.StartIndex, part.PrimitiveCount);
                 }
             }
@@ -799,13 +793,11 @@ namespace RacingGame.Graphics
                     // Render just the vertices, do not use the shaders of our model.
                     // This is the same code as ModelMeshPart.Draw() uses, but
                     // this method is internal and can't be used by us :(
-                    BaseGame.Device.VertexDeclaration = part.VertexDeclaration;
-                    BaseGame.Device.Vertices[0].SetSource(
-                        mesh.VertexBuffer, part.StreamOffset, part.VertexStride);
-                    BaseGame.Device.Indices = mesh.IndexBuffer;
+                    BaseGame.Device.SetVertexBuffer(part.VertexBuffer);
+                    BaseGame.Device.Indices = part.IndexBuffer;
                     BaseGame.Device.DrawIndexedPrimitives(
                         PrimitiveType.TriangleList,
-                        part.BaseVertex, 0,
+                        part.VertexOffset, 0,
                         part.NumVertices, part.StartIndex, part.PrimitiveCount);
                 }
             }

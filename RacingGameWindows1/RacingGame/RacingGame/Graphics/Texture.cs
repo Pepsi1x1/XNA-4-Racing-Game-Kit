@@ -396,15 +396,15 @@ namespace RacingGame.Graphics
         /// <param name="rect">Rectangle</param>
         /// <param name="pixelRect">Pixel rectangle</param>
         /// <param name="color">Color</param>
-        /// <param name="blendMode">Blend mode</param>
+        /// <param name="blendState">Blend mode</param>
         public void RenderOnScreen(Rectangle rect, Rectangle pixelRect,
-            Color color, SpriteBlendMode blendMode)
+            Color color, BlendState blendState)
         {
-            if (blendMode == SpriteBlendMode.Additive)
+            if (blendState == BlendState.Additive)
                 additiveSprite.Draw(internalXnaTexture, rect, pixelRect, color);
             else
                 alphaSprite.Draw(internalXnaTexture, rect, pixelRect, color);
-            //SpriteHelper.AddSpriteToRender(this, rect, pixelRect, color, blendMode);
+            //SpriteHelper.AddSpriteToRender(this, rect, pixelRect, color, blendState);
         }
         #endregion
 

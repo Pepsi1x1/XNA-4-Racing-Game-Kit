@@ -344,7 +344,7 @@ namespace RacingGame.Tracks
         public void Render(Material columnMaterial)
         {
             // We use tangent vertices for everything here
-            BaseGame.Device.VertexDeclaration = TangentVertex.VertexDeclaration;
+
             // Restore the world matrix
             BaseGame.WorldMatrix = Matrix.Identity;
 
@@ -374,8 +374,7 @@ namespace RacingGame.Tracks
             if (columnVertices == null)
                 return;
 
-            BaseGame.Device.Vertices[0].SetSource(columnVb, 0,
-                TangentVertex.SizeInBytes);
+            BaseGame.Device.SetVertexBuffer(columnVb);
             BaseGame.Device.Indices = columnIb;
             BaseGame.Device.DrawIndexedPrimitives(
                 PrimitiveType.TriangleList,

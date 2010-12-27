@@ -41,6 +41,7 @@ namespace RacingGame.Shaders
         /// </summary>
         RenderTarget2D renderTarget = null;
 
+        /*
         /// <summary>
         /// Z buffer surface for shadow mapping render targets that do not
         /// fit in our resolution. Usually unused!
@@ -57,6 +58,7 @@ namespace RacingGame.Shaders
                 return zBufferSurface;
             }
         }
+         */
 
         /// <summary>
         /// Posible size types for creating a RenderToTexture object.
@@ -153,7 +155,7 @@ namespace RacingGame.Shaders
             get
             {
                 if (alreadyResolved)
-                    internalXnaTexture = renderTarget.GetTexture();
+                    internalXnaTexture = renderTarget;
                 return internalXnaTexture;
             }
         }
@@ -211,88 +213,42 @@ namespace RacingGame.Shaders
 
         #region Create
         /// <summary>
-        /// Check if we can use a specific surface format for render targets.
-        /// </summary>
-        /// <param name="format"></param>
-        /// <returns></returns>
-        private static bool CheckRenderTargetFormat(SurfaceFormat format)
-        {
-        //    return BaseGame.Device.CreationParameters.Adapter.CheckDeviceFormat(
-        //        BaseGame.Device.CreationParameters.DeviceType,
-        //        BaseGame.Device.DisplayMode.Format,
-        //        ResourceUsage.None,
-        //        QueryUsages.None,
-        //        ResourceType.RenderTarget,
-        //        format);
-            return BaseGame.Device.CreationParameters.Adapter.CheckDeviceFormat(
-                BaseGame.Device.CreationParameters.DeviceType,
-                BaseGame.Device.DisplayMode.Format,
-                TextureUsage.None,
-                QueryUsages.None,
-                ResourceType.RenderTarget,
-                format);
-
-        }
-
-        /// <summary>
         /// Create
         /// </summary>
         private void Create()
         {
-            SurfaceFormat format = SurfaceFormat.Color;
-            // Try to use R32F format for shadow mapping if possible (ps20),
-            // else just use A8R8G8B8 format for shadow mapping and
-            // for normal RenderToTextures too.
-            if (sizeType == SizeType.ShadowMap)
-            {
-                // Can do R32F format?
-                if (CheckRenderTargetFormat(SurfaceFormat.Single))
-                    format = SurfaceFormat.Single;
-                // Else try R16F format, thats still much better than A8R8G8B8
-                else if (CheckRenderTargetFormat(SurfaceFormat.HalfSingle))
-                    format = SurfaceFormat.HalfSingle;
-                // And check a couple more formats (mainly for the Xbox360 support)
-                else if (CheckRenderTargetFormat(SurfaceFormat.HalfVector2))
-                    format = SurfaceFormat.HalfVector2;
-                else if (CheckRenderTargetFormat(SurfaceFormat.Luminance16))
-                    format = SurfaceFormat.Luminance16;
-                // Else nothing found, well, then just use the 8 bit Color format.
-            }
+            SurfaceFormat outSF;
+            DepthFormat outDF;
+            int outMSC;
 
-            MultiSampleType aaType = MultiSampleType.TwoSamples;
+            int MultisampleCount = 2;
+
             if (BaseGame.Device.PresentationParameters.BackBufferHeight == 720)
             {
-                aaType = MultiSampleType.FourSamples;
+                MultisampleCount = 4;
             }
 
             if (sizeType == SizeType.ShadowMap ||
                 BaseGame.CurrentPlatform == PlatformID.Win32NT)
             {
-                aaType = MultiSampleType.None;
+                MultisampleCount = 0;
             }
+
+
+            BaseGame.Device.Adapter.QueryRenderTargetFormat(BaseGame.Device.GraphicsProfile,
+                SurfaceFormat.Single, BaseGame.BackBufferDepthFormat, MultisampleCount, out outSF, out outDF, out outMSC);
+
+            if (sizeType == SizeType.ShadowMap)
+                outMSC = 0;
+            
             // Create render target of specified size.
             renderTarget = new RenderTarget2D(
                 BaseGame.Device,
-                texWidth, texHeight, 1,
-                    format, aaType, 0, RenderTargetUsage.PlatformContents);
+                texWidth, texHeight, false,
+                    outSF, outDF, outMSC, RenderTargetUsage.PlatformContents);
 
-            if (format != SurfaceFormat.Color)
+            if (outSF != SurfaceFormat.Color)
                 usesHighPercisionFormat = true;
-
-            // Create z buffer surface for shadow map render targets
-            // if they don't fit in our current resolution.
-            if (sizeType == SizeType.ShadowMap &&
-                (texWidth > BaseGame.Width || texHeight > BaseGame.Height))
-            {
-                zBufferSurface =
-                    new DepthStencilBuffer(
-                    BaseGame.Device,
-                    texWidth, texHeight,
-                    // Lets use the same stuff as the back buffer.
-                    BaseGame.BackBufferDepthFormat,
-                    // Don't use multisampling, render target does not support that.
-                    MultiSampleType.None, 0);
-            }
 
             loaded = true;
         }
@@ -355,7 +311,7 @@ namespace RacingGame.Shaders
             alreadyResolved = true;
             // fix
             //BaseGame.Device.ResolveRenderTarget(0);
-            BaseGame.Device.SetRenderTarget(0, null);
+            BaseGame.Device.SetRenderTarget(null);
         }
         #endregion
     }

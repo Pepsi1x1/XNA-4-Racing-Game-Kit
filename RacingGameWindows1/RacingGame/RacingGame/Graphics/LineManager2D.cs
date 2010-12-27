@@ -141,10 +141,6 @@ namespace RacingGame.Graphics
         /// </summary>
         private const int MaxNumOfLines = 64;
 
-        /// <summary>
-        /// Vertex declaration for our lines.
-        /// </summary>
-        VertexDeclaration decl = null;
         #endregion
 
         #region Constructor
@@ -153,8 +149,6 @@ namespace RacingGame.Graphics
         /// </summary>
         public LineManager2D()
         {
-            decl = new VertexDeclaration(
-                RacingGameManager.Device, VertexPositionColor.VertexElements);
         }
         #endregion
 
@@ -174,10 +168,6 @@ namespace RacingGame.Graphics
         /// <param name="disposing">Disposing</param>
         protected virtual void Dispose(bool disposing)
         {
-            if (disposing)
-            {
-                decl.Dispose();
-            }
         }
         #endregion
 
@@ -299,7 +289,6 @@ namespace RacingGame.Graphics
                     "LineRendering2D",
                     delegate
                     {
-                        BaseGame.Device.VertexDeclaration = decl;
                         BaseGame.Device.DrawUserPrimitives<VertexPositionColor>(
                             PrimitiveType.LineList, lineVertices, 0, numOfPrimitives);
                     });

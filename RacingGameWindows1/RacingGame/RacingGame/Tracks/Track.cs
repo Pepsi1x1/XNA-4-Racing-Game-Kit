@@ -1131,16 +1131,17 @@ namespace RacingGame.Tracks
         public void Render()
         {
             // We use tangent vertices for everything here
-            BaseGame.Device.VertexDeclaration = TangentVertex.VertexDeclaration;
+
             // Restore the world matrix
             BaseGame.WorldMatrix = Matrix.Identity;
 
             // Make sure Anisotropic filtering is enabled for the road
-            BaseGame.Device.SamplerStates[0].MinFilter = TextureFilter.Anisotropic;
-            BaseGame.Device.SamplerStates[0].MagFilter = TextureFilter.Anisotropic;
+            BaseGame.Device.SamplerStates[0] = SamplerState.AnisotropicWrap;
+            //BaseGame.Device.SamplerStates[0].MinFilter = TextureFilter.Anisotropic;
+            //BaseGame.Device.SamplerStates[0].MagFilter = TextureFilter.Anisotropic;
 
-            BaseGame.Device.SamplerStates[0].MipFilter = TextureFilter.Linear;
-            BaseGame.Device.SamplerStates[0].MaxAnisotropy = 8; // 8 is enough, isn't it?
+            //BaseGame.Device.SamplerStates[0].MipFilter = TextureFilter.Linear;
+            //BaseGame.Device.SamplerStates[0].MaxAnisotropy = 8; // 8 is enough, isn't it?
 
             // Render the road itself
             ShaderEffect.normalMapping.Render(
@@ -1182,8 +1183,7 @@ namespace RacingGame.Tracks
         /// </summary>
         private void RenderRoadVertices()
         {
-            BaseGame.Device.Vertices[0].SetSource(roadVb, 0,
-                TangentVertex.SizeInBytes);
+            BaseGame.Device.SetVertexBuffer(roadVb);
             BaseGame.Device.Indices = roadIb;
             BaseGame.Device.DrawIndexedPrimitives(PrimitiveType.TriangleList,
                 0, 0, points.Count * 5,
@@ -1195,8 +1195,7 @@ namespace RacingGame.Tracks
         /// </summary>
         private void RenderRoadBackVertices()
         {
-            BaseGame.Device.Vertices[0].SetSource(roadBackVb, 0,
-                TangentVertex.SizeInBytes);
+            BaseGame.Device.SetVertexBuffer(roadBackVb);
             BaseGame.Device.Indices = roadBackIb;
             BaseGame.Device.DrawIndexedPrimitives(PrimitiveType.TriangleList,
                 0, 0, points.Count * 4,
@@ -1212,19 +1211,21 @@ namespace RacingGame.Tracks
                 return;
 
             // Disable culling (render tunnel from both sides)
-            BaseGame.Device.RenderState.CullMode = CullMode.None;
+            BaseGame.Device.RasterizerState = new RasterizerState() {CullMode = CullMode.None};
 
             // Render vertices
-            BaseGame.Device.Vertices[0].SetSource(roadTunnelVb, 0,
-                TangentVertex.SizeInBytes);
+            BaseGame.Device.SetVertexBuffer(roadTunnelVb);
             BaseGame.Device.Indices = roadTunnelIb;
             BaseGame.Device.DrawIndexedPrimitives(PrimitiveType.TriangleList,
                 0, 0, roadTunnelVertices.Length,
                 0, roadTunnelIndices.Length / 3);
 
             // Restore culling (default is always counter clockwise)
-            BaseGame.Device.RenderState.CullMode =
-                CullMode.CullCounterClockwiseFace;
+            BaseGame.Device.RasterizerState = new RasterizerState()
+                                                  {
+                                                      CullMode =
+                                                          CullMode.CullCounterClockwiseFace
+                                                  };
         }
         #endregion
 
@@ -1238,11 +1239,10 @@ namespace RacingGame.Tracks
             ShaderEffect.shadowMapping.UpdateGenerateShadowWorldMatrix(
                 Matrix.Identity);
             // We use tangent vertices for everything here
-            BaseGame.Device.VertexDeclaration = TangentVertex.VertexDeclaration;
 
             // Disable culling (render road and tunnel from both sides,
             // this gives correct shadows to loopings, tunnels and overlappings)
-            BaseGame.Device.RenderState.CullMode = CullMode.None;
+            BaseGame.Device.RasterizerState = new RasterizerState() { CullMode = CullMode.None };
 
             // Render road and tunnels
             RenderRoadVertices();

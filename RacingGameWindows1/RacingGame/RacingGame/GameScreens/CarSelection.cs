@@ -155,8 +155,8 @@ namespace RacingGame.GameScreens
             //SpriteHelper.DrawAllSprites();
 
             // Restart the sprites after the paint
-            Texture.additiveSprite.Begin(SpriteBlendMode.Additive);
-            Texture.alphaSprite.Begin(SpriteBlendMode.AlphaBlend);
+            Texture.additiveSprite.Begin(SpriteSortMode.Deferred, BlendState.Additive);
+            Texture.alphaSprite.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend);
 
             // Cars header
             int posX = 10;

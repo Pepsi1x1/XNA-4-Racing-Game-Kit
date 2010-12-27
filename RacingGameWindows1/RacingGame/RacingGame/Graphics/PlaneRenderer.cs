@@ -95,7 +95,6 @@ namespace RacingGame.Graphics
         public void Render()
         {
             BaseGame.WorldMatrix = Matrix.CreateTranslation(pos);
-            BaseGame.Device.VertexDeclaration = TangentVertex.VertexDeclaration;
             ShaderEffect.normalMapping.Render(
                 material,
                 "DiffuseSpecular20",

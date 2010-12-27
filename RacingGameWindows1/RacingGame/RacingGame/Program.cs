@@ -65,10 +65,12 @@ namespace RacingGame
                     "RacingGame",
                     MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
-            catch (OutOfVideoMemoryException)
+            catch (NotSupportedException ex/*OutOfVideoMemoryException*/)
             {
                 GameSettings.SetMinimumGraphics();
 
+                Console.WriteLine(ex.Message);
+                Console.Write(ex.StackTrace);
                 MessageBox.Show("Insufficent video memory.\n\n" +
                     "The graphics settings have been reconfigured to the minimum. " +
                     "Please restart the application. \n\nIf you continue to receive " +

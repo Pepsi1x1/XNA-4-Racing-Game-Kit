@@ -210,7 +210,7 @@ namespace RacingGame.Graphics
         /// <summary>
         /// Back buffer depth format
         /// </summary>
-        static DepthFormat backBufferDepthFormat = DepthFormat.Depth32;
+        static DepthFormat backBufferDepthFormat = DepthFormat.Depth24;
         /// <summary>
         /// Back buffer depth format
         /// </summary>
@@ -933,13 +933,11 @@ namespace RacingGame.Graphics
         {
             if (value)
             {
-                Device.RenderState.AlphaBlendEnable = true;
-                Device.RenderState.SourceBlend = Blend.SourceAlpha;
-                Device.RenderState.DestinationBlend = Blend.InverseSourceAlpha;
+                Device.BlendState = new BlendState();
             }
             else
             {
-                Device.RenderState.AlphaBlendEnable = false;
+                Device.BlendState = BlendState.Opaque;
             }
         }
 
@@ -977,20 +975,32 @@ namespace RacingGame.Graphics
             switch (value)
             {
                 case AlphaMode.DisableAlpha:
-                    Device.RenderState.SourceBlend = Blend.Zero;
-                    Device.RenderState.DestinationBlend = Blend.One;
+                    Device.BlendState = new BlendState()
+                    {
+                        AlphaSourceBlend = Blend.Zero,
+                        AlphaDestinationBlend = Blend.One
+                    };
                     break;
                 case AlphaMode.Default:
-                    Device.RenderState.SourceBlend = Blend.SourceAlpha;
-                    Device.RenderState.DestinationBlend = Blend.InverseSourceAlpha;
+                    Device.BlendState = new BlendState()
+                    {
+                        AlphaSourceBlend = Blend.SourceAlpha,
+                        AlphaDestinationBlend = Blend.InverseSourceAlpha
+                    };
                     break;
                 case AlphaMode.SourceAlphaOne:
-                    Device.RenderState.SourceBlend = Blend.SourceAlpha;
-                    Device.RenderState.DestinationBlend = Blend.One;
+                    Device.BlendState = new BlendState()
+                    {
+                        AlphaSourceBlend = Blend.SourceAlpha,
+                        AlphaDestinationBlend = Blend.One
+                    };
                     break;
                 case AlphaMode.OneOne:
-                    Device.RenderState.SourceBlend = Blend.One;
-                    Device.RenderState.DestinationBlend = Blend.One;
+                    Device.BlendState = new BlendState()
+                    {
+                        AlphaSourceBlend = Blend.One,
+                        AlphaDestinationBlend = Blend.One
+                    };
                     break;
             }
         }
@@ -1011,8 +1021,8 @@ namespace RacingGame.Graphics
             graphicsManager = new GraphicsDeviceManager(this);
 
             // Set minimum requirements
-            graphicsManager.MinimumPixelShaderProfile = ShaderProfile.PS_2_0;
-            graphicsManager.MinimumVertexShaderProfile = ShaderProfile.VS_2_0;
+            //graphicsManager.MinimumPixelShaderProfile = ShaderProfile.PS_2_0;
+            //graphicsManager.MinimumVertexShaderProfile = ShaderProfile.VS_2_0;
 
             ApplyResolutionChange();
 
@@ -1059,14 +1069,14 @@ namespace RacingGame.Graphics
                 presentParams.RenderTargetUsage = RenderTargetUsage.PlatformContents;
                 if (graphicsManager.PreferredBackBufferHeight == 720)
                 {
-                    presentParams.MultiSampleType = MultiSampleType.FourSamples;
+                    presentParams.MultiSampleCount = 4;
 #if !DEBUG
                     presentParams.PresentationInterval = PresentInterval.One;
 #endif
                 }
                 else
                 {
-                    presentParams.MultiSampleType = MultiSampleType.TwoSamples;
+                    presentParams.MultiSampleCount = 2;
 #if !DEBUG
                     presentParams.PresentationInterval = PresentInterval.Two;
 #endif
@@ -1102,7 +1112,7 @@ namespace RacingGame.Graphics
             backBufferDepthFormat = graphicsManager.PreferredDepthStencilFormat;
 
             // Update resolution if it changes
-            graphicsManager.DeviceReset += new EventHandler(graphics_DeviceReset);
+            graphicsManager.DeviceReset += graphics_DeviceReset;
             graphics_DeviceReset(null, EventArgs.Empty);
 
             // Create matrices for our shaders, this makes it much easier
@@ -1136,17 +1146,16 @@ namespace RacingGame.Graphics
 
             // Re-Set device
             // Restore z buffer state
-            BaseGame.Device.RenderState.DepthBufferEnable = true;
-            BaseGame.Device.RenderState.DepthBufferWriteEnable = true;
+            BaseGame.Device.DepthStencilState = DepthStencilState.Default;
             // Set u/v addressing back to wrap
-            BaseGame.Device.SamplerStates[0].AddressU = TextureAddressMode.Wrap;
-            BaseGame.Device.SamplerStates[0].AddressV = TextureAddressMode.Wrap;
+            BaseGame.Device.SamplerStates[0] = SamplerState.LinearWrap;
             // Restore normal alpha blending
             BaseGame.SetCurrentAlphaMode(BaseGame.AlphaMode.Default);
 
+            //TODO: AlphaTestEffect
             // Set 128 and greate alpha compare for Model.Render
-            BaseGame.Device.RenderState.ReferenceAlpha = 128;
-            BaseGame.Device.RenderState.AlphaFunction = CompareFunction.Greater;
+            //BaseGame.Device.RenderState.ReferenceAlpha = 128;
+            //BaseGame.Device.RenderState.AlphaFunction = CompareFunction.Greater;
 
             // Recreate all render-targets
             foreach (RenderToTexture renderToTexture in remRenderToTextures)
@@ -1332,7 +1341,7 @@ namespace RacingGame.Graphics
 
             lastFrameTotalTimeMs = totalTimeMs;
             elapsedTimeThisFrameInMs =
-                (float)gameTime.ElapsedRealTime.TotalMilliseconds;
+                (float)gameTime.ElapsedGameTime.TotalMilliseconds;
             totalTimeMs += elapsedTimeThisFrameInMs;
 
             // Make sure elapsedTimeThisFrameInMs is never 0
@@ -1435,8 +1444,8 @@ namespace RacingGame.Graphics
                 ClearBackground();
 
                 // Get our sprites ready to draw...
-                Texture.additiveSprite.Begin(SpriteBlendMode.Additive);
-                Texture.alphaSprite.Begin(SpriteBlendMode.AlphaBlend);
+                Texture.additiveSprite.Begin(SpriteSortMode.Deferred, BlendState.Additive);
+                Texture.alphaSprite.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend);
 
                 // Handle custom user render code
                 Render();
@@ -1456,7 +1465,7 @@ namespace RacingGame.Graphics
                 //Handle drawing the Trophy
                 if (RacingGameManager.InGame && RacingGameManager.Player.Victory)
                 {
-                    Texture.alphaSprite.Begin(SpriteBlendMode.AlphaBlend);
+                    Texture.alphaSprite.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend);
 
                     int rank = GameScreens.Highscores.GetRankFromCurrentTime(
                         RacingGameManager.Player.LevelNum,
@@ -1598,7 +1607,7 @@ namespace RacingGame.Graphics
         internal static void SetRenderTarget(RenderTarget2D renderTarget,
             bool isSceneRenderTarget)
         {
-            Device.SetRenderTarget(0, renderTarget);
+            Device.SetRenderTarget(renderTarget);
             if (isSceneRenderTarget)
                 remSceneRenderTarget = renderTarget;
             lastSetRenderTarget = renderTarget;
@@ -1615,11 +1624,11 @@ namespace RacingGame.Graphics
             {
                 remSceneRenderTarget = null;
                 lastSetRenderTarget = null;
-                Device.SetRenderTarget(0, null);
+                Device.SetRenderTarget(null);
             }
             else
             {
-                Device.SetRenderTarget(0, remSceneRenderTarget);
+                Device.SetRenderTarget(remSceneRenderTarget);
                 lastSetRenderTarget = remSceneRenderTarget;
             }
         }

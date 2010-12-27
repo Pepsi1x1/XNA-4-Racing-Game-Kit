@@ -423,7 +423,7 @@ namespace RacingGame
         protected override void PostUIRender()
         {
             // Enable depth buffer again
-            BaseGame.Device.RenderState.DepthBufferEnable = true;
+            BaseGame.Device.DepthStencilState = DepthStencilState.Default;
 
             // Currently in car selection screen?
             if (gameScreens.Count > 0 &&

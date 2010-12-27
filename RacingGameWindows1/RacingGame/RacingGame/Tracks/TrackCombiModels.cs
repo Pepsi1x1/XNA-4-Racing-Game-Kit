@@ -123,7 +123,7 @@ namespace RacingGame.Tracks
         /// <param name="filename">Filename</param>
         public TrackCombiModels(string filename)
         {
-            StreamReader file = new StreamReader(FileHelper.LoadGameContentFile(
+            StreamReader file = new StreamReader(TitleContainer.OpenStream(
                 Directory + "\\" + filename + "." + Extension));
 
             // Load everything into this class with help of the XmlSerializer.

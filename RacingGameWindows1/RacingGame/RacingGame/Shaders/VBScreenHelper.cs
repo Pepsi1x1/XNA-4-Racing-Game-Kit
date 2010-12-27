@@ -40,7 +40,6 @@ namespace RacingGame.Shaders
             /// Vertex buffer to render stuff on screen.
             /// </summary>
             private VertexBuffer vbScreen;
-            private VertexDeclaration decl;
             #endregion
 
             #region Constructor
@@ -64,13 +63,7 @@ namespace RacingGame.Shaders
                         new Vector3(1.0f, 1.0f, 0.5f),
                         new Vector2(1, 0)),
                 };
-                // fix
-                //vbScreen = new VertexBuffer(
-                //    BaseGame.Device,
-                //    typeof(VertexPositionTexture),
-                //    vertices.Length,
-                //    ResourceUsage.WriteOnly,
-                //    ResourceManagementMode.Automatic);
+
                 vbScreen = new VertexBuffer(
                     BaseGame.Device,
                     typeof(VertexPositionTexture),
@@ -78,15 +71,6 @@ namespace RacingGame.Shaders
                     BufferUsage.WriteOnly);
 
                 vbScreen.SetData(vertices);
-
-                decl = new VertexDeclaration(
-                    BaseGame.Device, VertexPositionTexture.VertexElements);
-
-                /*do we still have to do this?
-                // Recreate vb if device was lost and is reseted again
-                BaseGame.Device.DeviceReset +=
-                    new System.EventHandler(OnCreateVBScreen);
-                 */
             }
             #endregion
 
@@ -97,9 +81,7 @@ namespace RacingGame.Shaders
             public void Render()
             {
                 // Rendering is pretty straight forward (if you know how anyway).
-                BaseGame.Device.VertexDeclaration = decl;
-                BaseGame.Device.Vertices[0].SetSource(vbScreen, 0,
-                    VertexPositionTexture.SizeInBytes);
+                BaseGame.Device.SetVertexBuffer(vbScreen);
                 BaseGame.Device.DrawPrimitives(PrimitiveType.TriangleStrip, 0, 2);
             }
             #endregion
@@ -128,10 +110,6 @@ namespace RacingGame.Shaders
             /// </summary>
             VertexBuffer vertexBuffer = null;
 
-            /// <summary>
-            /// Vertex declaration
-            /// </summary>
-            VertexDeclaration decl;
             #endregion
 
             #region Constructor
@@ -217,9 +195,6 @@ namespace RacingGame.Shaders
                         num += 6;
                     }
                 indexBuffer.SetData(indices);
-
-                decl = new VertexDeclaration(
-                    BaseGame.Device, VertexPositionTexture.VertexElements);
             }
             #endregion
 
@@ -230,9 +205,7 @@ namespace RacingGame.Shaders
             public void Render()
             {
                 // Rendering is pretty straight forward (if you know how anyway).
-                BaseGame.Device.VertexDeclaration = decl;
-                BaseGame.Device.Vertices[0].SetSource(vertexBuffer, 0,
-                    VertexPositionTexture.SizeInBytes);
+                BaseGame.Device.SetVertexBuffer(vertexBuffer);
                 BaseGame.Device.Indices = indexBuffer;
                 BaseGame.Device.DrawIndexedPrimitives(PrimitiveType.TriangleList,
                     0, 0, gridWidth * gridHeight,

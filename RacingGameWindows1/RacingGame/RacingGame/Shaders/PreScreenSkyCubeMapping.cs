@@ -105,12 +105,11 @@ namespace RacingGame.Shaders
                 return;
 
             // Don't use or write to the z buffer
-            BaseGame.Device.RenderState.DepthBufferEnable = false;
-            BaseGame.Device.RenderState.DepthBufferWriteEnable = false;
-            BaseGame.Device.RenderState.CullMode = CullMode.None;
+            BaseGame.Device.DepthStencilState = DepthStencilState.None;
+            BaseGame.Device.RasterizerState = new RasterizerState { CullMode = CullMode.None };
 
             // Also don't use any kind of blending.
-            BaseGame.Device.RenderState.AlphaBlendEnable = false;
+            BaseGame.Device.BlendState = BlendState.Opaque;
 
             // Set effect parameters
             AmbientColor = setSkyColor;
@@ -122,9 +121,10 @@ namespace RacingGame.Shaders
             cube.Meshes[0].Draw();
 
             // Reset previous render states
-            BaseGame.Device.RenderState.DepthBufferEnable = true;
-            BaseGame.Device.RenderState.DepthBufferWriteEnable = true;
-            BaseGame.Device.RenderState.CullMode = CullMode.CullCounterClockwiseFace;
+            BaseGame.Device.DepthStencilState = DepthStencilState.Default;
+            BaseGame.Device.RasterizerState = new RasterizerState { CullMode = CullMode.CullCounterClockwiseFace };
+
+            BaseGame.Device.BlendState = BlendState.AlphaBlend;
         }
 
         /// <summary>

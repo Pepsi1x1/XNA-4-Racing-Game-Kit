@@ -143,10 +143,6 @@ namespace RacingGame.Graphics
         protected const int MaxNumOfLines =
             4096;
 
-        /// <summary>
-        /// Vertex declaration for our lines.
-        /// </summary>
-        VertexDeclaration decl = null;
         #endregion
 
         #region Initialization
@@ -158,9 +154,6 @@ namespace RacingGame.Graphics
             if (BaseGame.Device == null)
                 throw new ArgumentNullException(
                     "XNA device is not initialized, can't init line manager.");
-
-            decl = new VertexDeclaration(
-                BaseGame.Device, VertexPositionColor.VertexElements);
         }
         #endregion
 
@@ -180,10 +173,6 @@ namespace RacingGame.Graphics
         /// <param name="disposing">Disposing</param>
         protected virtual void Dispose(bool disposing)
         {
-            if (disposing)
-            {
-                decl.Dispose();
-            }
         }
         #endregion
 
@@ -291,7 +280,6 @@ namespace RacingGame.Graphics
                     delegate
                     {
                         BaseGame.SetAlphaBlendingEnabled(true);
-                        BaseGame.Device.VertexDeclaration = decl;
                         BaseGame.Device.DrawUserPrimitives<VertexPositionColor>(
                             PrimitiveType.LineList, lineVertices, 0, numOfPrimitives);
                     });

@@ -152,10 +152,9 @@ namespace RacingGame.Shaders
                 return;
 
             // Don't use or write to the z buffer
-            BaseGame.Device.RenderState.DepthBufferEnable = false;
-            BaseGame.Device.RenderState.DepthBufferWriteEnable = false;
+            BaseGame.Device.DepthStencilState = DepthStencilState.None;
             // Disable alpha for the first pass
-            BaseGame.Device.RenderState.AlphaBlendEnable = false;
+            BaseGame.Device.BlendState = BlendState.Opaque;
 
             if (windowSize != null)
                 windowSize.SetValue(
@@ -171,30 +170,21 @@ namespace RacingGame.Shaders
                     "This shader should have exactly 2 passes!");
 
             // Just start pass 0
-            try
-            {
-                effect.Begin(SaveStateMode.None);
+            
                 blurMapTexture.SetRenderTarget();
 
                 EffectPass effectPass = effect.CurrentTechnique.Passes[0];
-                effectPass.Begin();
+                effectPass.Apply();
                 VBScreenHelper.Render();
-                effectPass.End();
-            }
-            finally
-            {
-                effect.End();
-            }
+
 
             blurMapTexture.Resolve();
             BaseGame.ResetRenderTarget(false);
 
             // Restore z buffer state
-            BaseGame.Device.RenderState.DepthBufferEnable = true;
-            BaseGame.Device.RenderState.DepthBufferWriteEnable = true;
+            BaseGame.Device.DepthStencilState = DepthStencilState.Default;
             // Set u/v addressing back to wrap
-            BaseGame.Device.SamplerStates[0].AddressU = TextureAddressMode.Wrap;
-            BaseGame.Device.SamplerStates[0].AddressV = TextureAddressMode.Wrap;
+            BaseGame.Device.SamplerStates[0] = SamplerState.LinearWrap;
             // Restore normal alpha blending
             //BaseGame.Device.RenderState.BlendFunction = BlendFunction.Add;
             BaseGame.SetCurrentAlphaMode(BaseGame.AlphaMode.Default);
@@ -214,12 +204,12 @@ namespace RacingGame.Shaders
                 return;
 
             // Don't use or write to the z buffer
-            BaseGame.Device.RenderState.DepthBufferEnable = false;
-            BaseGame.Device.RenderState.DepthBufferWriteEnable = false;
+            // Don't use or write to the z buffer
+            BaseGame.Device.DepthStencilState = DepthStencilState.None;
 
             // Make sure we clamp everything to 0-1
-            BaseGame.Device.SamplerStates[0].AddressU = TextureAddressMode.Clamp;
-            BaseGame.Device.SamplerStates[0].AddressV = TextureAddressMode.Clamp;
+            BaseGame.Device.SamplerStates[0] = SamplerState.LinearClamp;
+
             // Restore back buffer as render target
             //not required: BaseGame.ResetRenderTarget(false);
 
@@ -234,32 +224,22 @@ namespace RacingGame.Shaders
                     "This shader should have exactly 2 passes!");
 
             // Render second pass
-            try
-            {
-                effect.Begin(SaveStateMode.None);
 
                 // Use ZeroSourceBlend alpha mode for the final result
-                BaseGame.Device.RenderState.AlphaBlendEnable = true;
+                BaseGame.Device.BlendState = BlendState.Additive;
+                /*BaseGame.Device.RenderState.AlphaBlendEnable = true;
                 BaseGame.Device.RenderState.AlphaBlendOperation = BlendFunction.Add;
                 BaseGame.Device.RenderState.SourceBlend = Blend.Zero;
-                BaseGame.Device.RenderState.DestinationBlend = Blend.SourceColor;
+                BaseGame.Device.RenderState.DestinationBlend = Blend.SourceColor;*/
 
                 EffectPass effectPass = effect.CurrentTechnique.Passes[1];
-                effectPass.Begin();
+                effectPass.Apply();
                 VBScreenHelper.Render();
-                effectPass.End();
-            }
-            finally
-            {
-                effect.End();
-            }
 
             // Restore z buffer state
-            BaseGame.Device.RenderState.DepthBufferEnable = true;
-            BaseGame.Device.RenderState.DepthBufferWriteEnable = true;
+            BaseGame.Device.DepthStencilState = DepthStencilState.Default;
             // Set u/v addressing back to wrap
-            BaseGame.Device.SamplerStates[0].AddressU = TextureAddressMode.Wrap;
-            BaseGame.Device.SamplerStates[0].AddressV = TextureAddressMode.Wrap;
+            BaseGame.Device.SamplerStates[0] = SamplerState.LinearWrap;
             // Restore normal alpha blending
             //BaseGame.Device.RenderState.BlendFunction = BlendFunction.Add;
             BaseGame.SetCurrentAlphaMode(BaseGame.AlphaMode.Default);
