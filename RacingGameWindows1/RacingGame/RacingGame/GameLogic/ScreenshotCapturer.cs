@@ -145,7 +145,9 @@ namespace RacingGame.GameLogic
                 int width = BaseGame.Device.PresentationParameters.BackBufferWidth;
                 int height = BaseGame.Device.PresentationParameters.BackBufferHeight;
 
-                using (var tex = new Texture2D(BaseGame.Device, width, height, false, BaseGame.Device.PresentationParameters.BackBufferFormat))
+                using (
+                    var tex = new Texture2D(BaseGame.Device, width, height, false,
+                                            BaseGame.Device.PresentationParameters.BackBufferFormat))
                 {
                     int[] backbuffer = new int[width*height];
                     BaseGame.Device.GetBackBufferData(backbuffer);
@@ -156,27 +158,29 @@ namespace RacingGame.GameLogic
                     FileHelper.StorageContainerMRE.Reset();
                     // Open a storage container
                     StorageDevice storageDevice = FileHelper.XnaUserDevice;
-                        if ((storageDevice != null) && storageDevice.IsConnected)
+                    if ((storageDevice != null) && storageDevice.IsConnected)
+                    {
+                        IAsyncResult async = storageDevice.BeginOpenContainer("RacingGame", null, null);
+
+                        async.AsyncWaitHandle.WaitOne();
+
+                        using (StorageContainer container = storageDevice.EndOpenContainer(async))
                         {
-                            IAsyncResult async = storageDevice.BeginOpenContainer("RacingGame", null, null);
-
-                            async.AsyncWaitHandle.WaitOne();
-
-                            using (StorageContainer container = storageDevice.EndOpenContainer(async))
+                            async.AsyncWaitHandle.Close();
+                            using (Stream stream = container.CreateFile(ScreenshotNameBuilder(screenshotNum)))
                             {
-                                async.AsyncWaitHandle.Close();
-                                using (Stream stream = container.CreateFile(ScreenshotNameBuilder(screenshotNum)))
-                                {
-                                    tex.SaveAsJpeg(stream, width, height);
-                                }
+                                tex.SaveAsJpeg(stream, width, height);
                             }
                         }
+                    }
                 }
             }
             catch (Exception ex)
-                    {
-                        Log.Write("Failed to save Screenshot: " + ex.ToString());
-                    }
+            {
+                Log.Write("Failed to save Screenshot: " + ex.ToString());
+            }
+        }
+
         #endregion
 
         #region Update

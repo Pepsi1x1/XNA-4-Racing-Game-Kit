@@ -332,13 +332,15 @@ namespace RacingGame.GameLogic
                 StorageDevice storageDevice = FileHelper.XnaUserDevice;
                 if ((storageDevice != null) && storageDevice.IsConnected)
                 {
+                    IAsyncResult async = storageDevice.BeginOpenContainer("RacingGame", null, null);
+
+                    async.AsyncWaitHandle.WaitOne();
+
                     using (StorageContainer container =
-                        storageDevice.OpenContainer("RacingGame"))
+                        storageDevice.EndOpenContainer(async))
                     {
-                        string fullPath = Path.Combine(container.Path,
-                            ReplayFilenames[trackNum]);
-                        using (FileStream stream = File.Open(fullPath, FileMode.Create,
-                            FileAccess.Write, FileShare.ReadWrite))
+                        async.AsyncWaitHandle.Close();
+                        using (Stream stream = container.CreateFile(ReplayFilenames[trackNum]))
                         {
                             using (BinaryWriter writer = new BinaryWriter(stream))
                             {
