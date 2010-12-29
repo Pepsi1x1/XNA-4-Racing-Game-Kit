@@ -236,7 +236,7 @@ namespace RacingGame.Shaders
 
 
             BaseGame.Device.Adapter.QueryRenderTargetFormat(BaseGame.Device.GraphicsProfile,
-                SurfaceFormat.Single, BaseGame.BackBufferDepthFormat, MultisampleCount, out outSF, out outDF, out outMSC);
+                SurfaceFormat.Rgba64, BaseGame.BackBufferDepthFormat, MultisampleCount, out outSF, out outDF, out outMSC);
 
             if (sizeType == SizeType.ShadowMap)
                 outMSC = 0;
