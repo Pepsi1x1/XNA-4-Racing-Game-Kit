@@ -226,7 +226,14 @@ namespace RacingGame.Shaders
             // Render second pass
 
                 // Use ZeroSourceBlend alpha mode for the final result
-                BaseGame.Device.BlendState = BlendState.Additive;
+            BaseGame.Device.BlendState = new BlendState()
+                                             {
+                                                 AlphaBlendFunction = BlendFunction.Add,
+                                                 AlphaSourceBlend = Blend.Zero,
+                                                 ColorSourceBlend = Blend.Zero,
+                                                 AlphaDestinationBlend = Blend.SourceAlpha,
+                                                 ColorDestinationBlend = Blend.SourceColor
+                                             };
                 /*BaseGame.Device.RenderState.AlphaBlendEnable = true;
                 BaseGame.Device.RenderState.AlphaBlendOperation = BlendFunction.Add;
                 BaseGame.Device.RenderState.SourceBlend = Blend.Zero;

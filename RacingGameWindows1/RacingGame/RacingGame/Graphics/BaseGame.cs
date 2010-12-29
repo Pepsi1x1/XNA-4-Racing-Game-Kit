@@ -933,7 +933,7 @@ namespace RacingGame.Graphics
         {
             if (value)
             {
-                Device.BlendState = new BlendState();
+                Device.BlendState = BlendState.AlphaBlend;
             }
             else
             {

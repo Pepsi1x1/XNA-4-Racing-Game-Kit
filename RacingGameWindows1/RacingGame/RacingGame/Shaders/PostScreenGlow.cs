@@ -152,7 +152,7 @@ namespace RacingGame.Shaders
             BaseGame.Device.DepthStencilState = DepthStencilState.None;
             // Also don't use any kind of blending.
             //Update: allow writing to alpha!
-            BaseGame.Device.BlendState = BlendState.Opaque;
+            BaseGame.Device.BlendState = BlendState.Additive;
 
             if (windowSize != null)
                 windowSize.SetValue(
