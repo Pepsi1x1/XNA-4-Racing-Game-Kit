@@ -71,12 +71,9 @@ namespace RacingGame.Helpers
                         return null;
                     }
                     IAsyncResult async = StorageDevice.BeginShowSelector(PlayerIndex.One, null, null);
-                    while (!async.IsCompleted)
-                    {
-                        Thread.Sleep(10);
-                        BaseGame.graphicsManager.GraphicsDevice.Clear(Color.Black);
-                        BaseGame.graphicsManager.GraphicsDevice.Present();
-                    }
+
+                    async.AsyncWaitHandle.WaitOne();
+
                     xnaUserDevice = StorageDevice.EndShowSelector(async);
 #if XBOX360
                     if (!Guide.IsVisible)
