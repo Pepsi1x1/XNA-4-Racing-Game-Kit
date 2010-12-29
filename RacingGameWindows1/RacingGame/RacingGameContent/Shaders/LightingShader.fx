@@ -144,7 +144,9 @@ float4 PS_SpecularPerPixel20(VertexOutput_SpecularPerPixel In) : COLOR
     float4 textureColor = tex2D(diffuseTextureSampler, In.texCoord);
     float3 normal = normalize(In.normal);
     float brightness = dot(normal, lightDir);
-    float specular = pow(abs(dot(normal, In.halfVec)), specularPower);
+	float dotp = dot(normal, In.halfVec);
+	float dotpMax = max(dotp, 0.0f);
+    float specular = pow(dotpMax, specularPower);
     return textureColor *
         (ambientColor +
         brightness * diffuseColor) +
