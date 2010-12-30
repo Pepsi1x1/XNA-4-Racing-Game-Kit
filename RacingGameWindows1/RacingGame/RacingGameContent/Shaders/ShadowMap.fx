@@ -402,7 +402,7 @@ float4 PS_UseShadowMap20(VB_UseShadowMap20 In) : COLOR
     // We can skip this if its too far away anway (else very far away landscape
     // parts will be darkenend)
     if (depth > 1)
-        return 0;
+        return 1;
     else
         // And apply
         return lerp(1, ShadowColor, resultDepth);
