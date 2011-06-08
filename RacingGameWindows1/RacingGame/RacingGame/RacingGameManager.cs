@@ -431,8 +431,7 @@ namespace RacingGame
                 ((CarSelection)gameScreens.Peek()).PostUIRender();
 
             // Do menu shader after everything
-            if (RacingGameManager.InMenu &&
-                PostScreenMenu.Started)
+            if (PostScreenMenu.Started)
                 UI.PostScreenMenuShader.Show();
         }
         #endregion

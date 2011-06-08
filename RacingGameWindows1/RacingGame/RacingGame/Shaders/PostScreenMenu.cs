@@ -225,8 +225,9 @@ namespace RacingGame.Shaders
                     else if (pass == 2)
                         blurMap2Texture.SetRenderTarget();
                     else
-                        // Do a full reset back to the back buffer
+                    {
                         BaseGame.ResetRenderTarget(true);
+                    }
 
                     EffectPass effectPass = effect.CurrentTechnique.Passes[pass];
                     effectPass.Apply();

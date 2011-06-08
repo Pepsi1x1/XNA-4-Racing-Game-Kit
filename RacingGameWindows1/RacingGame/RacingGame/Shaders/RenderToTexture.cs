@@ -245,7 +245,7 @@ namespace RacingGame.Shaders
             renderTarget = new RenderTarget2D(
                 BaseGame.Device,
                 texWidth, texHeight, false,
-                    outSF, outDF, outMSC, RenderTargetUsage.PlatformContents);
+                    outSF, outDF, outMSC, RenderTargetUsage.DiscardContents);
 
             if (outSF != SurfaceFormat.Color)
                 usesHighPercisionFormat = true;

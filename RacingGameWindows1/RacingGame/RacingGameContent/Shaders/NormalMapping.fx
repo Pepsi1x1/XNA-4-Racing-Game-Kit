@@ -438,9 +438,7 @@ VertexOutput_Specular20 VS_Specular20(VertexInput In)
     float3 worldEyePos = GetCameraPos();
     float3 worldVertPos = GetWorldPos(In.pos);
 
-    // Transform light vector and pass it as a color (clamped from 0 to 1)
-    // For ps_2_0 we don't need to clamp form 0 to 1
-    Out.lightVec = normalize(mul(worldToTangentSpace, GetLightDir()));
+    Out.lightVec = mul(worldToTangentSpace, GetLightDir());
     Out.viewVec = mul(worldToTangentSpace, worldEyePos - worldVertPos);
 
     // And pass everything to the pixel shader
@@ -457,7 +455,7 @@ float4 PS_Specular20(VertexOutput_Specular20 In) : COLOR
     normalVector = normalize(normalVector);
 
     // Additionally normalize the vectors
-    float3 lightVector = In.lightVec;
+    float3 lightVector = normalize(In.lightVec);
     float3 viewVector = normalize(In.viewVec);
     // For ps_2_0 we don't need to unpack the vectors to -1 - 1
 
@@ -555,7 +553,7 @@ float4 PS_DiffuseSpecular20(VertexOutput_Specular20 In) : COLOR
     normalVector = normalize(normalVector);
 
     // Additionally normalize the vectors
-    float3 lightVector = In.lightVec;
+	float3 lightVector = normalize(In.lightVec);
     float3 viewVector = normalize(In.viewVec);
     // For ps_2_0 we don't need to unpack the vectors to -1 - 1
 
@@ -863,9 +861,9 @@ VertexOutput20 VS_ReflectionSpecular20(VertexInput In)
 {
     VertexOutput20 Out;
     Out.pos = TransformPosition(In.pos);
-    Out.normal = CalcNormalVector(In.normal);
-    Out.viewVec = normalize(GetCameraPos() - GetWorldPos(In.pos));
-    Out.halfVec = normalize(Out.viewVec + lightDir);
+    Out.normal = mul(In.normal, (float3x3)world);
+    Out.viewVec = GetCameraPos() - GetWorldPos(In.pos);
+    Out.halfVec = Out.viewVec + lightDir;
     return Out;
 }
 
@@ -873,6 +871,7 @@ float4 PS_ReflectionSpecular20(VertexOutput20 In) : COLOR
 {
     half3 N = normalize(In.normal);
     float3 V = normalize(In.viewVec);
+	float3 hV = normalize(In.halfVec);
 
     // Reflection
     half3 R = reflect(-V, N);
@@ -888,7 +887,7 @@ float4 PS_ReflectionSpecular20(VertexOutput20 In) : COLOR
     float diff = saturate(dot(N, lightDir));
 
     // Specular factor
-    float spec = pow(saturate(dot(N, In.halfVec)), shininess);
+    float spec = pow(saturate(dot(N, hV)), shininess);
     
     // Output the colors
     float4 diffAmbColor = ambientColor + diff * diffuseColor;
@@ -943,9 +942,7 @@ VertexOutput_SpecularWithReflectionForCar20
 
     float3 worldEyePos = GetCameraPos();
 
-    // Transform light vector and pass it as a color (clamped from 0 to 1)
-    // For ps_2_0 we don't need to clamp form 0 to 1
-    Out.lightVec = normalize(mul(worldToTangentSpace, GetLightDir()));
+    Out.lightVec = mul(worldToTangentSpace, GetLightDir());
     Out.viewVec = mul(worldToTangentSpace, worldEyePos - worldVertPos);
 
     float3 normal = CalcNormalVector(In.normal);
@@ -1084,7 +1081,7 @@ float4 PS_SpecularRoad20(VertexOutput_Specular20 In) : COLOR
     normalVector = normalize(normalVector);
 
     // Additionally normalize the vectors
-    float3 lightVector = In.lightVec;
+    float3 lightVector = normalize(In.lightVec);
     float3 viewVector = normalize(In.viewVec);
     // For ps_2_0 we don't need to unpack the vectors to -1 - 1
 

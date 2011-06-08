@@ -24,6 +24,15 @@ namespace RacingGame.Shaders
     /// </summary>
     public class ShadowMapBlur : ShaderEffect
     {
+        static readonly BlendState ZeroSourceBlend = new BlendState()
+        {
+            AlphaBlendFunction = BlendFunction.Add,
+            AlphaSourceBlend = Blend.Zero,
+            ColorSourceBlend = Blend.Zero,
+            AlphaDestinationBlend = Blend.SourceAlpha,
+            ColorDestinationBlend = Blend.SourceColor
+        };
+
         #region Variables
         /// <summary>
         /// The shader effect filename for this shader.
@@ -133,7 +142,7 @@ namespace RacingGame.Shaders
             sceneMapTexture.Resolve();
 
             // Restore back buffer as render target
-            BaseGame.ResetRenderTarget(false);
+            BaseGame.ResetRenderTarget(true);
         }
         #endregion
 
@@ -204,7 +213,6 @@ namespace RacingGame.Shaders
                 return;
 
             // Don't use or write to the z buffer
-            // Don't use or write to the z buffer
             BaseGame.Device.DepthStencilState = DepthStencilState.None;
 
             // Make sure we clamp everything to 0-1
@@ -225,15 +233,8 @@ namespace RacingGame.Shaders
 
             // Render second pass
 
-                // Use ZeroSourceBlend alpha mode for the final result
-            BaseGame.Device.BlendState = new BlendState()
-                                             {
-                                                 AlphaBlendFunction = BlendFunction.Add,
-                                                 AlphaSourceBlend = Blend.Zero,
-                                                 ColorSourceBlend = Blend.Zero,
-                                                 AlphaDestinationBlend = Blend.SourceAlpha,
-                                                 ColorDestinationBlend = Blend.SourceColor
-                                             };
+            // Use ZeroSourceBlend alpha mode for the final result
+            BaseGame.Device.BlendState = ZeroSourceBlend;
                 /*BaseGame.Device.RenderState.AlphaBlendEnable = true;
                 BaseGame.Device.RenderState.AlphaBlendOperation = BlendFunction.Add;
                 BaseGame.Device.RenderState.SourceBlend = Blend.Zero;

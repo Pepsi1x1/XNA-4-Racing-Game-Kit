@@ -1211,7 +1211,7 @@ namespace RacingGame.Tracks
                 return;
 
             // Disable culling (render tunnel from both sides)
-            BaseGame.Device.RasterizerState = new RasterizerState() {CullMode = CullMode.None};
+            BaseGame.Device.RasterizerState = RasterizerState.CullNone;
 
             // Render vertices
             BaseGame.Device.SetVertexBuffer(roadTunnelVb);
@@ -1221,11 +1221,7 @@ namespace RacingGame.Tracks
                 0, roadTunnelIndices.Length / 3);
 
             // Restore culling (default is always counter clockwise)
-            BaseGame.Device.RasterizerState = new RasterizerState()
-                                                  {
-                                                      CullMode =
-                                                          CullMode.CullCounterClockwiseFace
-                                                  };
+            BaseGame.Device.RasterizerState = RasterizerState.CullCounterClockwise;
         }
         #endregion
 
@@ -1242,7 +1238,7 @@ namespace RacingGame.Tracks
 
             // Disable culling (render road and tunnel from both sides,
             // this gives correct shadows to loopings, tunnels and overlappings)
-            BaseGame.Device.RasterizerState = new RasterizerState() { CullMode = CullMode.None };
+            BaseGame.Device.RasterizerState = RasterizerState.CullNone;
 
             // Render road and tunnels
             RenderRoadVertices();

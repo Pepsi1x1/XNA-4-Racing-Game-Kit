@@ -30,6 +30,14 @@ namespace RacingGame.Shaders
     /// </summary>
     public class PostScreenGlow : PostScreenMenu
     {
+        static readonly BlendState BlendStateAlphaWrite = new BlendState() {
+                ColorSourceBlend = Blend.One,
+                AlphaSourceBlend = Blend.Zero,
+
+                ColorDestinationBlend = Blend.Zero,
+                AlphaDestinationBlend = Blend.One
+            };
+
         #region Variables
         /// <summary>
         /// The shader effect filename for this shader.
@@ -152,7 +160,7 @@ namespace RacingGame.Shaders
             BaseGame.Device.DepthStencilState = DepthStencilState.None;
             // Also don't use any kind of blending.
             //Update: allow writing to alpha!
-            BaseGame.Device.BlendState = BlendState.Additive;
+            BaseGame.Device.BlendState = BlendStateAlphaWrite;
 
             if (windowSize != null)
                 windowSize.SetValue(
@@ -187,8 +195,9 @@ namespace RacingGame.Shaders
                     else if (pass == 3)
                         blurMap2Texture.SetRenderTarget();
                     else
-                        // Do a full reset back to the back buffer
+                    {
                         BaseGame.ResetRenderTarget(true);
+                    }
 
                     EffectPass effectPass = effect.CurrentTechnique.Passes[pass];
                     effectPass.Apply();

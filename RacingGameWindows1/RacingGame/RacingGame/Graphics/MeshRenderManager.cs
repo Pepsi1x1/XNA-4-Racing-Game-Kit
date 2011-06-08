@@ -260,7 +260,7 @@ namespace RacingGame.Graphics
                     //BaseGame.Device.RenderState.ReferenceAlpha = 128;
 
                     // Make 2sided, we use alpha mainly for our palms.
-                    BaseGame.Device.RasterizerState = new RasterizerState() { CullMode = CullMode.None };
+                    BaseGame.Device.RasterizerState = RasterizerState.CullNone;
                 }
                 // Render all meshes that use this material.
                 for (int meshNum = 0; meshNum < meshes.Count; meshNum++)
@@ -275,7 +275,7 @@ namespace RacingGame.Graphics
                 {
                     //TODO: AlphaTestEffect
                     //BaseGame.Device.RenderState.AlphaTestEnable = false;
-                    BaseGame.Device.RasterizerState = new RasterizerState() { CullMode = CullMode.CullCounterClockwiseFace };
+                    BaseGame.Device.RasterizerState = RasterizerState.CullCounterClockwise;
                 }
             }
             #endregion

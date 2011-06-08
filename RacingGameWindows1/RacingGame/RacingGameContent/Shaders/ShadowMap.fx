@@ -113,7 +113,7 @@ float4 PS_GenerateShadowMap(VB_GenerateShadowMap In) : COLOR
 {
     // Just set the interpolated depth value.
     // Format should be R32F or R16F, if that is not possible
-    // A8R8G8B8 is used, which is obviously not that percise.
+    // A8R8G8B8 is used, which is obviously not that precise.
     return In.depth;
 }
 
