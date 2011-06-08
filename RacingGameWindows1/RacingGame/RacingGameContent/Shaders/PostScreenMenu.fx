@@ -435,6 +435,7 @@ technique ScreenGlow
     {
         // Disable alpha testing, else most pixels will be skipped
         // because of the highlight HDR technique tricks used here!
+        //AlphaTestEnable = false;
         VertexShader = compile vs_1_1 VS_DownSample11();
         PixelShader  = compile ps_2_0 PS_DownSample11(sceneMapSampler);
     }
@@ -615,6 +616,7 @@ technique ScreenGlow20
     {
         // Disable alpha testing, else most pixels will be skipped
         // because of the highlight HDR technique tricks used here!
+        //AlphaTestEnable = false;
         VertexShader = compile vs_1_1 VS_DownSample20();
         PixelShader  = compile ps_2_0 PS_DownSample20(sceneMapSampler);
     }

@@ -106,6 +106,15 @@ float4 PS_Diffuse(VertexOutput_Diffuse In) : COLOR
     return diffuseTexture * diffAmbColor;
 }
 
+technique Diffuse
+{
+    pass P0
+    {
+        VertexShader = compile vs_1_1 VS_Diffuse();
+        PixelShader  = compile ps_2_0 PS_Diffuse();
+    }
+}
+
 // No need to write new shader for ps20
 technique Diffuse20
 {
@@ -113,6 +122,67 @@ technique Diffuse20
     {
         VertexShader = compile vs_2_0 VS_Diffuse();
         PixelShader  = compile ps_2_0 PS_Diffuse();
+    }
+}
+
+// -----------------------------------------------------
+
+// Vertex shader for ps_1_1 (specular is just not as strong)
+VertexOutput_SpecularPerPixel VS_SpecularPerPixel(VertexInput In)
+{
+    VertexOutput_SpecularPerPixel Out = (VertexOutput_SpecularPerPixel)0;      
+    Out.pos = TransformPosition(In.pos);
+    Out.texCoord = In.texCoord;
+
+    // Determine the eye vector
+    float3 worldEyePos = GetCameraPos();
+    float3 worldVertPos = GetWorldPos(In.pos);
+
+    // Calc normal vector
+    Out.normal = 0.5 + 0.5 * CalcNormalVector(In.normal);
+    // Eye vector
+    float3 eyeVec = normalize(worldEyePos - worldVertPos);
+    // Half angle vector
+    Out.halfVec = 0.5 + 0.5 * normalize(eyeVec + lightDir);
+
+    // Rest of the calculation is done in pixel shader
+    return Out;
+}
+
+// Pixel shader
+float4 PS_SpecularPerPixel(VertexOutput_SpecularPerPixel In) : COLOR
+{
+    float4 diffuseTexture = tex2D(diffuseTextureSampler, In.texCoord);
+    // Convert colors back to vectors. Without normalization it is
+    // a bit faster (2 instructions less), but not as correct!
+    float3 normal = 2.0 * (saturate(In.normal)-0.5);
+    float3 halfVec = 2.0 * (saturate(In.halfVec)-0.5);
+
+    // Diffuse factor
+    float diff = saturate(dot(normal, lightDir));
+    // Specular factor
+    float spec = saturate(dot(normal, halfVec));
+    //max. possible pow fake with mults here: spec = pow(spec, 8);
+    //same as: spec = spec*spec*spec*spec*spec*spec*spec*spec;
+
+    // (saturate(4*(dot(N,H)^2-0.75))^2*2 is a close approximation
+    // to pow(dot(N,H), 16). I use something like
+    // (saturate(4*(dot(N,H)^4-0.75))^2*2 for approx. pow(dot(N,H), 32)
+    spec = pow(saturate(4*(pow(spec, 2)-0.75)), 2);
+
+    // Output the color
+    float4 diffAmbColor = ambientColor + diff * diffuseColor;
+    return diffuseTexture *
+        diffAmbColor +
+        spec * specularColor * diffuseTexture.a;
+}
+
+technique SpecularPerPixel
+{
+    pass P0
+    {
+        VertexShader = compile vs_1_1 VS_SpecularPerPixel();
+        PixelShader  = compile ps_2_0 PS_SpecularPerPixel();
     }
 }
 
@@ -145,8 +215,7 @@ float4 PS_SpecularPerPixel20(VertexOutput_SpecularPerPixel In) : COLOR
     float3 normal = normalize(In.normal);
     float brightness = dot(normal, lightDir);
 	float dotp = dot(normal, In.halfVec);
-	float dotpMax = max(dotp, 0.0f);
-    float specular = pow(dotpMax, specularPower);
+    float specular = pow(dotp, specularPower);
     return textureColor *
         (ambientColor +
         brightness * diffuseColor) +
