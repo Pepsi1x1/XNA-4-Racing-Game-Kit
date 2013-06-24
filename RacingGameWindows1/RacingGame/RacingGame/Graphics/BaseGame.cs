@@ -17,6 +17,7 @@ using Microsoft.Xna.Framework.Storage;
 using System;
 using System.Collections.Generic;
 using System.Threading;
+using System.Windows.Forms;
 using RacingGame.GameLogic;
 using RacingGame.Helpers;
 using RacingGame.Properties;
@@ -1014,6 +1015,8 @@ namespace RacingGame.Graphics
         /// <param name="setWindowsTitle">Set windows title</param>
         protected BaseGame(string setWindowsTitle)
         {
+			ToggleFormVisibility(false);
+
             gamerServicesComponent = new GamerServicesComponent(this);
             base.Components.Add(gamerServicesComponent);
 
@@ -1023,8 +1026,6 @@ namespace RacingGame.Graphics
             // Set minimum requirements
             //graphicsManager.MinimumPixelShaderProfile = ShaderProfile.PS_2_0;
             //graphicsManager.MinimumVertexShaderProfile = ShaderProfile.VS_2_0;
-
-            ApplyResolutionChange();
 
             graphicsManager.PreparingDeviceSettings +=
                 new EventHandler<PreparingDeviceSettingsEventArgs>(
@@ -1099,6 +1100,7 @@ namespace RacingGame.Graphics
 
             GameSettings.Initialize();
             ApplyResolutionChange();
+
             Sound.SetVolumes(GameSettings.Default.SoundVolume, 
                 GameSettings.Default.MusicVolume);
             
@@ -1161,6 +1163,34 @@ namespace RacingGame.Graphics
             foreach (RenderToTexture renderToTexture in remRenderToTextures)
                 renderToTexture.HandleDeviceReset();
         }
+
+		/// <summary>
+		/// Toggles the visibility of the underlying windows form control that
+		/// the game is rendered upon. This function will primarily be used for
+		/// hiding the window at startup until the game has finished loading
+		/// user settings (dependant upon base.Initialize() being called) so
+		/// the proper resolutions can be applied.
+		/// </summary>
+		/// <param name="showForm">Whether or not the form will be shown.</param>
+		private void ToggleFormVisibility(bool showForm)
+		{
+			//Don't do anything if we're on the xbox.
+#if XBOX360
+			return;
+#endif
+			Form window = (Form)Form.FromHandle(Window.Handle);
+			if (showForm)
+			{
+				window.Opacity = 1;
+				System.Diagnostics.Debug.WriteLine("Showing form");
+			}
+			else
+			{
+				//Hide the borders anyways.
+				window.FormBorderStyle = FormBorderStyle.None;
+				window.Opacity = 0;
+			}
+		}
         #endregion
 
         #region Helper methods for 3d-calculations
@@ -1510,6 +1540,8 @@ namespace RacingGame.Graphics
             {
                 graphicsManager.ApplyChanges();
                 mustApplyDeviceChanges = false;
+				//Show the form in case this was the initial resolution change.
+				ToggleFormVisibility(true);
             }
         }
         #endregion
