@@ -362,9 +362,6 @@ namespace RacingGame
         protected override void Initialize()
         {
             base.Initialize();
-
-			//Testing the loading screen, don't load anything for now.
-			//LoadResources();
         }
 
 		/// <summary>
