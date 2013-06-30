@@ -55,8 +55,19 @@ namespace RacingGame.GameScreens
         }
         #endregion
 
-        #region Render
-        /// <summary>
+		#region Update
+		/// <summary>
+		/// Unimplemented
+		/// </summary>
+		/// <param name="gameTime"></param>
+		public void Update(GameTime gameTime)
+		{
+
+		}
+		#endregion
+
+		#region Render
+		/// <summary>
         /// Render game screen. Called each frame.
         /// </summary>
         public bool Render()

@@ -71,8 +71,19 @@ namespace RacingGame.GameScreens
         // Rest of car variables is automatically calculated below!
         #endregion
 
-        #region Render
-        /// <summary>
+		#region Update
+		/// <summary>
+		/// Unimplemented
+		/// </summary>
+		/// <param name="gameTime"></param>
+		public void Update(GameTime gameTime)
+		{
+
+		}
+		#endregion
+
+		#region Render
+		/// <summary>
         /// Render
         /// </summary>
         /// <returns>Bool</returns>

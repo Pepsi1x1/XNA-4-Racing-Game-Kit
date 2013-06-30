@@ -392,6 +392,7 @@ namespace RacingGame.Graphics
         #region Write all
         /// <summary>
         /// Write all
+		/// Draws the added texts to the screen.
         /// </summary>
         public void WriteAll()
         {

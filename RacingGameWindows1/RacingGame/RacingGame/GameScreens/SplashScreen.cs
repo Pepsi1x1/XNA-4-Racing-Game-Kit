@@ -8,6 +8,7 @@
 #endregion
 
 #region Using directives
+using Microsoft.Xna.Framework;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -23,6 +24,17 @@ namespace RacingGame.GameScreens
     /// </summary>
     class SplashScreen : IGameScreen
     {
+		#region Update
+		/// <summary>
+		/// Unimplemented
+		/// </summary>
+		/// <param name="gameTime"></param>
+		public void Update(GameTime gameTime)
+		{
+
+		}
+		#endregion
+
         #region RenderSplashScreen
         /// <summary>
         /// Render splash screen

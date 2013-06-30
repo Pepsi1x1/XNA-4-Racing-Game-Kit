@@ -265,6 +265,17 @@ namespace RacingGame.GameScreens
         }
         #endregion
 
+		#region Update
+		/// <summary>
+		/// Unimplemented
+		/// </summary>
+		/// <param name="gameTime"></param>
+		public void Update(GameTime gameTime)
+		{
+
+		}
+		#endregion
+
         #region Render
         int selectedLevel = 1;
         /// <summary>

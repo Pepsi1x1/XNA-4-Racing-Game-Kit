@@ -48,6 +48,17 @@ namespace RacingGame.GameScreens
             DistanceBetweenButtons = 32;
         #endregion
 
+		#region Update
+		/// <summary>
+		/// Unimplemented
+		/// </summary>
+		/// <param name="gameTime"></param>
+		public void Update(GameTime gameTime)
+		{
+
+		}
+		#endregion
+
         #region Render
         /// <summary>
         /// Start with button 0 being selected (beginner track)

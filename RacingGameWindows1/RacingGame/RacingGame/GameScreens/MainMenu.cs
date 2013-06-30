@@ -90,8 +90,27 @@ namespace RacingGame.GameScreens
         float idleTime = 0.0f;
         #endregion
 
-        #region Render
-        /// <summary>
+		#region Constructor
+		public MainMenu()
+		{
+			// Start playing the menu music
+			Sound.Play(Sound.Sounds.MenuMusic);
+		}
+		#endregion
+
+		#region Update
+		/// <summary>
+		/// Unimplemented
+		/// </summary>
+		/// <param name="gameTime"></param>
+		public void Update(GameTime gameTime)
+		{
+
+		}
+		#endregion
+
+		#region Render
+		/// <summary>
         /// Interpolate rectangle
         /// </summary>
         /// <param name="rect1">Rectangle 1</param>

@@ -863,7 +863,7 @@ namespace RacingGame.Graphics
         #region Render
         bool showFps =
 #if DEBUG
- true;//false;//true;
+ true;
 #else
  false;
 #endif
