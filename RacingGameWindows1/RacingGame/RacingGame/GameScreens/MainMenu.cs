@@ -88,10 +88,35 @@ namespace RacingGame.GameScreens
         bool ignoreMouse = true;
 
         float idleTime = 0.0f;
+
+		bool musicHasStarted = false;
         #endregion
 
-        #region Render
-        /// <summary>
+		#region Constructor
+		public MainMenu()
+		{
+
+		}
+		#endregion
+
+		#region Update
+		/// <summary>
+		/// Handle starting the menu music.
+		/// </summary>
+		/// <param name="gameTime"></param>
+		public void Update(GameTime gameTime)
+		{
+			// Start playing the menu music
+			if (!musicHasStarted)
+			{
+				Sound.Play(Sound.Sounds.MenuMusic);
+				musicHasStarted = true;
+			}
+		}
+		#endregion
+
+		#region Render
+		/// <summary>
         /// Interpolate rectangle
         /// </summary>
         /// <param name="rect1">Rectangle 1</param>

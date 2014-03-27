@@ -16,6 +16,7 @@ using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Storage;
 using System;
 using System.Collections.Generic;
+using System.Threading;
 using RacingGame.GameLogic;
 using RacingGame.GameScreens;
 using RacingGame.Graphics;
@@ -128,6 +129,13 @@ namespace RacingGame
         {
             landscape.ReloadLevel(setNewLevel);
         }
+
+		/// <summary>
+		/// The thread that will load most of the content for this game.
+		/// </summary>
+		private static Thread loadingThread;
+
+		public static event EventHandler<EventArgs> LoadEvent;
         #endregion
 
         #region Properties
@@ -167,7 +175,8 @@ namespace RacingGame
                 // Only if not in Game, not in splash screen!
                 return gameScreens.Count > 0 &&
                     gameScreens.Peek().GetType() != typeof(GameScreen) &&
-                    gameScreens.Peek().GetType() != typeof(SplashScreen);
+                    gameScreens.Peek().GetType() != typeof(SplashScreen) &&
+					gameScreens.Peek().GetType() != typeof(LoadingScreen);
             }
         }
 
@@ -295,6 +304,22 @@ namespace RacingGame
                 return landscape;
             }
         }
+
+		public static Thread LoadingThread
+		{
+			get
+			{
+				return loadingThread;
+			}
+		}
+
+		public static bool ContentLoaded
+		{
+			get
+			{
+				return loadingThread.ThreadState == ThreadState.Stopped;
+			}
+		}
         #endregion
 
         #region Constructor
@@ -304,8 +329,9 @@ namespace RacingGame
         public RacingGameManager()
             : base("RacingGame")
         {
+			Sound.Initialize();
             // Start playing the menu music
-            Sound.Play(Sound.Sounds.MenuMusic);
+            //Sound.Play(Sound.Sounds.MenuMusic);
 
             // Create main menu at our main entry point
             gameScreens.Push(new MainMenu());
@@ -313,6 +339,12 @@ namespace RacingGame
             // But start with splash screen, if user clicks or presses Start,
             // we are back in the main menu.
             gameScreens.Push(new SplashScreen());
+
+			//We want to initially show the loading screen while things start.
+			gameScreens.Push(new LoadingScreen());
+
+			loadingThread = new Thread(LoadResources);
+			loadingThread.Priority = ThreadPriority.BelowNormal;
         }
 
         /// <summary>
@@ -330,23 +362,36 @@ namespace RacingGame
         protected override void Initialize()
         {
             base.Initialize();
-
-            // Load models
-            carModel = new Model("Car");
-            carSelectionPlate = new Model("CarSelectionPlate");
-
-            // Load landscape
-            landscape = new Landscape(Level.Beginner);
-
-            // Load textures, first one is grabbed from the imported one through
-            // the car.x model, the other two are loaded seperately.
-            carTextures = new Texture[3];
-            carTextures[0] = new Texture("RacerCar");
-            carTextures[1] = new Texture("RacerCar2");
-            carTextures[2] = new Texture("RacerCar3");
-            colorSelectionTexture = new Texture("ColorSelection");
-            brakeTrackMaterial = new Material("track");
         }
+
+		/// <summary>
+		/// Initializes and loads some content, previously referred to as the
+		/// "car stuff".
+		/// </summary>
+		private void LoadResources()
+		{
+			LoadEvent("Models...", null);
+			// Load models
+			carModel = new Model("Car");
+			carSelectionPlate = new Model("CarSelectionPlate");
+
+			LoadEvent("Landscape...", null);
+			// Load landscape
+			landscape = new Landscape(Level.Beginner);
+
+			LoadEvent("Textures...", null);
+			// Load textures, first one is grabbed from the imported one through
+			// the car.x model, the other two are loaded seperately.
+			carTextures = new Texture[3];
+			carTextures[0] = new Texture("RacerCar");
+			carTextures[1] = new Texture("RacerCar2");
+			carTextures[2] = new Texture("RacerCar3");
+			colorSelectionTexture = new Texture("ColorSelection");
+			brakeTrackMaterial = new Material("track");
+
+			LoadEvent("All systems go!", null);
+			Thread.Sleep(1000);
+		}
         #endregion
 
         #region Add game screen
@@ -373,8 +418,17 @@ namespace RacingGame
             // Update game engine
             base.Update(gameTime);
 
-            // Update player and game logic
-            player.Update();
+			if (gameScreens.Count > 0)
+			{
+				if (gameScreens.Peek().GetType() != typeof(LoadingScreen))
+				{
+					// Update player and game logic
+					player.Update();
+				}
+
+				//Update the game screen
+				gameScreens.Peek().Update(gameTime);
+			}
         }
         #endregion
 

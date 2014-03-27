@@ -8,6 +8,7 @@
 #endregion
 
 #region Using directives
+using Microsoft.Xna.Framework;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -25,5 +26,11 @@ namespace RacingGame.GameScreens
         /// Run game screen. Called each frame. Returns true if we want to exit it.
         /// </summary>
         bool Render();
+
+		/// <summary>
+		/// Process logic for this screen. Note that this method is called before
+		/// the draw (or render) method in XNA.
+		/// </summary>
+		void Update(GameTime gameTime);
     }
 }

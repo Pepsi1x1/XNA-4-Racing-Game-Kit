@@ -17,6 +17,7 @@ using Microsoft.Xna.Framework.Storage;
 using System;
 using System.Collections.Generic;
 using System.Threading;
+using System.Windows.Forms;
 using RacingGame.GameLogic;
 using RacingGame.Helpers;
 using RacingGame.Properties;
@@ -1014,17 +1015,13 @@ namespace RacingGame.Graphics
         /// <param name="setWindowsTitle">Set windows title</param>
         protected BaseGame(string setWindowsTitle)
         {
+			ToggleFormVisibility(false);
+
             gamerServicesComponent = new GamerServicesComponent(this);
             base.Components.Add(gamerServicesComponent);
 
             // Set graphics
             graphicsManager = new GraphicsDeviceManager(this);
-
-            // Set minimum requirements
-            //graphicsManager.MinimumPixelShaderProfile = ShaderProfile.PS_2_0;
-            //graphicsManager.MinimumVertexShaderProfile = ShaderProfile.VS_2_0;
-
-            ApplyResolutionChange();
 
             graphicsManager.PreparingDeviceSettings +=
                 new EventHandler<PreparingDeviceSettingsEventArgs>(
@@ -1047,8 +1044,6 @@ namespace RacingGame.Graphics
             // Update windows title (used for unit testing)
             this.Window.Title = setWindowsTitle;
             remWindowsTitle = setWindowsTitle;
-
-            Sound.Initialize();
         }
 
         /// <summary>
@@ -1099,6 +1094,7 @@ namespace RacingGame.Graphics
 
             GameSettings.Initialize();
             ApplyResolutionChange();
+
             Sound.SetVolumes(GameSettings.Default.SoundVolume, 
                 GameSettings.Default.MusicVolume);
             
@@ -1161,6 +1157,34 @@ namespace RacingGame.Graphics
             foreach (RenderToTexture renderToTexture in remRenderToTextures)
                 renderToTexture.HandleDeviceReset();
         }
+
+		/// <summary>
+		/// Toggles the visibility of the underlying windows form control that
+		/// the game is rendered upon. This function will primarily be used for
+		/// hiding the window at startup until the game has finished loading
+		/// user settings (dependant upon base.Initialize() being called) so
+		/// the proper resolutions can be applied.
+		/// </summary>
+		/// <param name="showForm">Whether or not the form will be shown.</param>
+		private void ToggleFormVisibility(bool showForm)
+		{
+			//Don't do anything if we're on the xbox.
+#if XBOX360
+			return;
+#endif
+			Form window = (Form)Form.FromHandle(Window.Handle);
+			if (showForm)
+			{
+				window.Opacity = 1;
+				System.Diagnostics.Debug.WriteLine("Showing form");
+			}
+			else
+			{
+				//Hide the borders anyways.
+				window.FormBorderStyle = FormBorderStyle.None;
+				window.Opacity = 0;
+			}
+		}
         #endregion
 
         #region Helper methods for 3d-calculations
@@ -1436,72 +1460,72 @@ namespace RacingGame.Graphics
         /// <param name="gameTime">Game time</param>
         protected override void Draw(GameTime gameTime)
         {
-            try
-            {
-                // Clear anyway, makes unit tests easier and fixes problems if
-                // we don't have the z buffer cleared (some issues with line
-                // rendering might happen else). Performance drop is not significant!
-                ClearBackground();
+			try
+			{
+				// Clear anyway, makes unit tests easier and fixes problems if
+				// we don't have the z buffer cleared (some issues with line
+				// rendering might happen else). Performance drop is not significant!
+				ClearBackground();
 
-                // Get our sprites ready to draw...
-                Texture.additiveSprite.Begin(SpriteSortMode.Deferred, BlendState.Additive);
-                Texture.alphaSprite.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend);
+				// Get our sprites ready to draw...
+				Texture.additiveSprite.Begin(SpriteSortMode.Deferred, BlendState.Additive);
+				Texture.alphaSprite.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend);
 
-                // Handle custom user render code
-                Render();
+				// Handle custom user render code
+				Render();
 
-                // Render all models we remembered this frame.
-                meshRenderManager.Render();
+				// Render all models we remembered this frame.
+				meshRenderManager.Render();
 
-                // Render all 3d lines
-                lineManager3D.Render();
+				// Render all 3d lines
+				lineManager3D.Render();
 
-                // Render UI and font texts, this also handles all collected
-                // screen sprites (on top of 3d game code)
-                UIRenderer.Render(lineManager2D);
+				// Render UI and font texts, this also handles all collected
+				// screen sprites (on top of 3d game code)
+				UIRenderer.Render(lineManager2D);
 
-                PostUIRender();
+				PostUIRender();
 
-                //Handle drawing the Trophy
-                if (RacingGameManager.InGame && RacingGameManager.Player.Victory)
-                {
-                    Texture.alphaSprite.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend);
+				//Handle drawing the Trophy
+				if (RacingGameManager.InGame && RacingGameManager.Player.Victory)
+				{
+					Texture.alphaSprite.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend);
 
-                    int rank = GameScreens.Highscores.GetRankFromCurrentTime(
-                        RacingGameManager.Player.LevelNum,
-                        (int)RacingGameManager.Player.BestTimeMilliseconds);
+					int rank = GameScreens.Highscores.GetRankFromCurrentTime(
+						RacingGameManager.Player.LevelNum,
+						(int)RacingGameManager.Player.BestTimeMilliseconds);
 
-                    // Show one of the trophies
-                    BaseGame.UI.GetTrophyTexture(
-                        // Select right one
-                        rank == 0 ? UIRenderer.TrophyType.Gold :
-                        rank == 1 ? UIRenderer.TrophyType.Silver :
-                        UIRenderer.TrophyType.Bronze).
-                        RenderOnScreen(new Rectangle(
-                        BaseGame.Width / 2 - BaseGame.Width / 8,
-                        BaseGame.Height / 2 - BaseGame.YToRes(10),
-                        BaseGame.Width / 4, BaseGame.Height * 2 / 5));
+					// Show one of the trophies
+					BaseGame.UI.GetTrophyTexture(
+						// Select right one
+						rank == 0 ? UIRenderer.TrophyType.Gold :
+						rank == 1 ? UIRenderer.TrophyType.Silver :
+						UIRenderer.TrophyType.Bronze).
+						RenderOnScreen(new Rectangle(
+						BaseGame.Width / 2 - BaseGame.Width / 8,
+						BaseGame.Height / 2 - BaseGame.YToRes(10),
+						BaseGame.Width / 4, BaseGame.Height * 2 / 5));
 
-                    Texture.alphaSprite.End();
-                }
+					Texture.alphaSprite.End();
+				}
 
-                ui.RenderTextsAndMouseCursor();
-            }
-            // Only catch exceptions here in release mode, when debugging
-            // we want to see the source of the error. In release mode
-            // we want to play and not be annoyed by some bugs ^^
+				ui.RenderTextsAndMouseCursor();
+			}
+			// Only catch exceptions here in release mode, when debugging
+			// we want to see the source of the error. In release mode
+			// we want to play and not be annoyed by some bugs ^^
 #if !DEBUG
-            catch (Exception ex)
-            {
-                Log.Write("Render loop error: " + ex.ToString());
-                if (renderLoopErrorCount++ > 100)
-                    throw;
-            }
+        catch (Exception ex)
+        {
+            Log.Write("Render loop error: " + ex.ToString());
+            if (renderLoopErrorCount++ > 100)
+                throw;
+        }
 #endif
-            finally
-            {
-                // Dummy block to prevent error in debug mode
-            }
+			finally
+			{
+				// Dummy block to prevent error in debug mode
+			}
 
             base.Draw(gameTime);
 
@@ -1510,6 +1534,8 @@ namespace RacingGame.Graphics
             {
                 graphicsManager.ApplyChanges();
                 mustApplyDeviceChanges = false;
+				//Show the form in case this was the initial resolution change.
+				ToggleFormVisibility(true);
             }
         }
         #endregion

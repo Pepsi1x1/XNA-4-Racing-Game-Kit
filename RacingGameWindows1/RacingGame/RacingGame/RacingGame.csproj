@@ -16,8 +16,7 @@
     <XnaProfile>HiDef</XnaProfile>
     <XnaCrossPlatformGroupID>36b86d43-6472-4986-a2dc-c7aa498823d3</XnaCrossPlatformGroupID>
     <XnaOutputType>Game</XnaOutputType>
-    <ApplicationIcon>
-    </ApplicationIcon>
+    <ApplicationIcon>RacingGame.ico</ApplicationIcon>
     <Thumbnail>GameThumbnail.png</Thumbnail>
     <PublishUrl>publish\</PublishUrl>
     <Install>true</Install>
@@ -118,6 +117,7 @@
     <Compile Include="GameLogic\Replay.cs" />
     <Compile Include="GameLogic\ScreenshotCapturer.cs" />
     <Compile Include="GameScreens\CarSelection.cs" />
+    <Compile Include="GameScreens\LoadingScreen.cs" />
     <Compile Include="GameScreens\GameScreen.cs" />
     <Compile Include="GameScreens\Help.cs" />
     <Compile Include="GameScreens\Highscores.cs" />
